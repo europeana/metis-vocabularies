@@ -1,0 +1,9 @@
+{
+  "name": "GeonamesVersion2",
+  "type": "PLACE",
+  "uris": [
+    "http://sws.geonames.org/"
+  ],
+  "xslt": "",
+  "parentIterations": 1
+}
