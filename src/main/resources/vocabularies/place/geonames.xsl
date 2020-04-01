@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gn="http://www.geonames.org/ontology#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:dc="http://purl.org/dc/terms/" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:gn="http://www.geonames.org/ontology#"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+        xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:dc="http://purl.org/dc/terms/"
+        version="1.0">
     <xsl:param name="targetId"/>
     <xsl:output indent="yes" encoding="UTF-8"/>
     <xsl:template match="/rdf:RDF">

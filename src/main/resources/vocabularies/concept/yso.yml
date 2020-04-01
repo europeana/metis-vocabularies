@@ -1,0 +1,12 @@
+name: YSO
+type: CONCEPT
+paths:
+- http://www.yso.fi/onto/yso/
+parentIterations: 0
+examples:
+- http://www.yso.fi/onto/yso/p5007
+- http://www.yso.fi/onto/yso/p1808
+- http://www.yso.fi/onto/yso/p4818
+counterExamples:
+- http://www.yso.fi/onto/yso/p105081
+- http://www.yso.fi/onto/yso/p105069

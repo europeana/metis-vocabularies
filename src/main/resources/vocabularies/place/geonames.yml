@@ -1,0 +1,5 @@
+name: GeonamesVersion2
+type: PLACE
+paths:
+- http://sws.geonames.org/
+parentIterations: 1

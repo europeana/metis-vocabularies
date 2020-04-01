@@ -1,10 +1,7 @@
-
 # Geonames
-- vocabulary:
-    metadata: vocabularies/place/geonames.json
-    mapping: vocabularies/place/geonames.xsl
+- metadata: vocabularies/place/geonames.yml
+  mapping: vocabularies/place/geonames.xsl
 
 # YSO
-- vocabulary:
-    metadata: vocabularies/concept/yso.json
-    mapping: vocabularies/concept/yso.xsl
+- metadata: vocabularies/concept/yso.yml
+  mapping: vocabularies/concept/yso.xsl
