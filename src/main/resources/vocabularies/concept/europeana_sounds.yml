@@ -1,0 +1,6 @@
+name: Sounds genres
+type: CONCEPT
+paths:
+- http://data.europeana.eu/concept/soundgenres/
+examples:
+- http://data.europeana.eu/concept/soundgenres/Music/Western_classical_music

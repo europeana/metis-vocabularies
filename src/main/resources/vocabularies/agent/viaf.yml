@@ -1,0 +1,6 @@
+name: VIAF
+type: AGENT
+paths:
+- http://viaf.org/viaf/
+examples:
+- http://viaf.org/viaf/13114421

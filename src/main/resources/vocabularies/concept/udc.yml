@@ -1,0 +1,7 @@
+name: UDC
+type: CONCEPT
+paths:
+- http://udcdata.info/rdf
+examples:
+- http://udcdata.info/rdf/026874
+- http://udcdata.info/rdf/065280

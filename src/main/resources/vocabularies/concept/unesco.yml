@@ -1,0 +1,6 @@
+name: UNESCO
+type: CONCEPT
+paths:
+- http://vocabularies.unesco.org/thesaurus/
+examples:
+- http://vocabularies.unesco.org/thesaurus/concept10423

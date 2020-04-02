@@ -3,3 +3,5 @@ type: PLACE
 paths:
 - http://sws.geonames.org/
 parentIterations: 1
+examples:
+- http://sws.geonames.org/1123961/

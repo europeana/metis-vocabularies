@@ -1,0 +1,9 @@
+name: LCSH Concepts
+type: CONCEPT
+paths:
+- http://id.loc.gov/authorities/subjects/
+suffix: .skos.rdf
+examples:
+- http://id.loc.gov/authorities/subjects/sh85085001
+- http://id.loc.gov/authorities/subjects/sh85085171
+- http://id.loc.gov/authorities/subjects/sh2001002368

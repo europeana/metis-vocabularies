@@ -1,0 +1,12 @@
+name: GNDSubjectHeadingsSensoStricto
+type: CONCEPT
+paths:
+- http://d-nb.info/gnd
+parentIterations: 1
+examples:
+- http://d-nb.info/gnd/1023810115
+counterExamples:
+- http://d-nb.info/gnd/10000666-8
+- http://d-nb.info/gnd/100000541
+- http://d-nb.info/gnd/100006000
+- http://d-nb.info/gnd/4011882-4

@@ -1,0 +1,7 @@
+name: Israel Museum Jerusalem objects
+type: CONCEPT
+paths:
+- http://www.imj.org.il/imagine/thesaurus/objects
+suffix: .rdf
+examples:
+- http://www.imj.org.il/imagine/thesaurus/objects/T15729

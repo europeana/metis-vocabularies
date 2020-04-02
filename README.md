@@ -26,8 +26,8 @@ future without the risk of bloating this directory file.
 
 ## Metadata files
 
-Each vocabulary in the directory file has exactly one **unique** metadata file. This file contains
-the following information:
+Each vocabulary in the directory file has exactly one **unique** metadata file. This YAML file 
+contains the following information:
 
 * **name** (String value): the **unique** human-readable name of the vocabulary, by which you can 
 recognise the vocabulary. This field is obligatory.

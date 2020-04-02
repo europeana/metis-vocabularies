@@ -1,0 +1,6 @@
+name: Fashion Vocabulary
+type: CONCEPT
+paths:
+- http://thesaurus.europeanafashion.eu/thesaurus/
+examples:
+- http://thesaurus.europeanafashion.eu/thesaurus/10397

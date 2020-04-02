@@ -1,0 +1,7 @@
+name: ULAN agents
+type: AGENT
+paths:
+- http://vocab.getty.edu/ulan
+examples:
+- http://vocab.getty.edu/ulan/500032927
+- http://vocab.getty.edu/ulan/500000043

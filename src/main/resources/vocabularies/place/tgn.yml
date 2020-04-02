@@ -1,0 +1,7 @@
+name: TGN places
+type: PLACE
+paths:
+- http://vocab.getty.edu/tgn/
+examples:
+- http://vocab.getty.edu/tgn/7006810
+- http://vocab.getty.edu/tgn/1003865

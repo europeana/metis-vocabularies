@@ -1,0 +1,7 @@
+name: MIMO-Person
+type: AGENT
+paths:
+- http://www.mimo-db.eu/InstrumentMaker
+suffix: .rdf
+examples:
+- http://www.mimo-db.eu/InstrumentMaker/Corporation/130
