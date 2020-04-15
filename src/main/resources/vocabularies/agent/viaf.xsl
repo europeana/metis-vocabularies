@@ -47,7 +47,12 @@
                         </rdagr2:dateOfBirth>
                     </xsl:for-each><!-- Tag mapping: schema:sameAs -> owl:sameAs -->
                     <xsl:for-each select="./schema:sameAs">
-                        <owl:sameAs><!-- Text content mapping (only content with non-space characters) -->
+                        <owl:sameAs><!-- Attribute mapping: rdf:resource -> rdf:resource -->
+                            <xsl:if test="@rdf:resource">
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="@rdf:resource"></xsl:value-of>
+                                </xsl:attribute>
+                            </xsl:if><!-- Text content mapping (only content with non-space characters) -->
                             <xsl:for-each select="text()[normalize-space()]">
                                 <xsl:if test="position() &gt; 1">
                                     <xsl:text> </xsl:text>
