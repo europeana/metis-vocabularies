@@ -5,3 +5,4 @@ paths:
 suffix: .rdf
 examples:
 - http://www.mimo-db.eu/InstrumentMaker/Corporation/130
+- http://www.mimo-db.eu/InstrumentMaker/Person/245

@@ -3,7 +3,6 @@ type: CONCEPT
 paths:
 - http://www.mimo-db.eu/InstrumentsKeywords
 - http://www.mimo-db.eu/HornbostelAndSachs
-suffix: .rdf
 examples:
 - http://www.mimo-db.eu/HornbostelAndSachs/108
 - http://www.mimo-db.eu/InstrumentsKeywords/2273
