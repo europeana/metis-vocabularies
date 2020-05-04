@@ -1,110 +1,110 @@
 # AAT - Getty vocabularies
-- metadata: vacabularies/concept/aat.yml
-  mapping: vacabularies/concept/aat.xsl
+- metadata: vocabularies/concept/aat.yml
+  mapping: vocabularies/concept/aat.xsl
 
 # Dismarc Format - Discover Music Archives (Europeana)
-- metadata: vacabularies/concept/dismarc_format.yml
-  mapping: vacabularies/concept/dismarc_format.xsl
+- metadata: vocabularies/concept/dismarc_format.yml
+  mapping: vocabularies/concept/dismarc_format.xsl
 
 # Dismarc Genres - Discover Music Archives (Europeana)
-- metadata: vacabularies/concept/dismarc_genres.yml
-  mapping: vacabularies/concept/dismarc_genres.xsl
+- metadata: vocabularies/concept/dismarc_genres.yml
+  mapping: vocabularies/concept/dismarc_genres.xsl
 
 # EAGLE - Europeana network of Ancient Greek and Latin Epigraphy
-- metadata: vacabularies/concept/eagle.yml
-  mapping: vacabularies/concept/eagle.xsl
+- metadata: vocabularies/concept/eagle.yml
+  mapping: vocabularies/concept/eagle.xsl
 
 # Europeana Fashion
-- metadata: vacabularies/concept/europeana_fashion.yml
-  mapping: vacabularies/concept/europeana_fashion.xsl
+- metadata: vocabularies/concept/europeana_fashion.yml
+  mapping: vocabularies/concept/europeana_fashion.xsl
 
 # Europeana Sounds
-- metadata: vacabularies/concept/europeana_sounds.yml
-  mapping: vacabularies/concept/europeana_sounds.xsl
+- metadata: vocabularies/concept/europeana_sounds.yml
+  mapping: vocabularies/concept/europeana_sounds.xsl
 
 # Europeana WWI
-- metadata: vacabularies/concept/europeana_ww1.yml
-  mapping: vacabularies/concept/europeana_ww1.xsl
+- metadata: vocabularies/concept/europeana_ww1.yml
+  mapping: vocabularies/concept/europeana_ww1.xsl
 
 # Geonames
 - metadata: vocabularies/place/geonames.yml
   mapping: vocabularies/place/geonames.xsl
 
 # GND Corporate Body (Deutsche Nationalbibliothek)
-- metadata: vacabularies/agent/gnd_corporate.yml
-  mapping: vacabularies/agent/gnd_corporate.xsl
+- metadata: vocabularies/agent/gnd_corporate.yml
+  mapping: vocabularies/agent/gnd_corporate.xsl
 
 # GND Differentiated Person (Deutsche Nationalbibliothek)
-- metadata: vacabularies/agent/gnd_person.yml
-  mapping: vacabularies/agent/gnd_person.xsl
+- metadata: vocabularies/agent/gnd_person.yml
+  mapping: vocabularies/agent/gnd_person.xsl
 
 # GND Royal or Member of a Royal House (Deutsche Nationalbibliothek)
-- metadata: vacabularies/agent/gnd_royal.yml
-  mapping: vacabularies/agent/gnd_royal.xsl
+- metadata: vocabularies/agent/gnd_royal.yml
+  mapping: vocabularies/agent/gnd_royal.xsl
 
 # GND Series of Conference or Event (Deutsche Nationalbibliothek)
-- metadata: vacabularies/agent/gnd_event_series.yml
-  mapping: vacabularies/agent/gnd_event_series.xsl
+- metadata: vocabularies/agent/gnd_event_series.yml
+  mapping: vocabularies/agent/gnd_event_series.xsl
 
 # GND Subject Headings Senso Stricto (Deutsche Nationalbibliothek)
-- metadata: vacabularies/concept/gnd_subject_headings.yml
-  mapping: vacabularies/concept/gnd_subject_headings.xsl
+- metadata: vocabularies/concept/gnd_subject_headings.yml
+  mapping: vocabularies/concept/gnd_subject_headings.xsl
 
 # GND Territorial Corporate Body or Administrative Unit (Deutsche Nationalbibliothek)
-- metadata: vacabularies/place/gnd_territory.yml
-  mapping: vacabularies/place/gnd_territory.xsl
+- metadata: vocabularies/place/gnd_territory.yml
+  mapping: vocabularies/place/gnd_territory.xsl
 
 # Iconclass
-- metadata: vacabularies/concept/iconclass.yml
-  mapping: vacabularies/concept/iconclass.xsl
+- metadata: vocabularies/concept/iconclass.yml
+  mapping: vocabularies/concept/iconclass.xsl
 
 # IMJ (Israel Museum Jerusalem)
-- metadata: vacabularies/concept/imj.yml
-  mapping: vacabularies/concept/imj.xsl
+- metadata: vocabularies/concept/imj.yml
+  mapping: vocabularies/concept/imj.xsl
 
 # LCSH - Library of Congress
-- metadata: vacabularies/concept/lcsh.yml
-  mapping: vacabularies/concept/lcsh.xsl
+- metadata: vocabularies/concept/lcsh.yml
+  mapping: vocabularies/concept/lcsh.xsl
 
 # MIMO Agents - Musical Instrument Museums Online
-- metadata: vacabularies/agent/mimo.yml
-  mapping: vacabularies/agent/mimo.xsl
+- metadata: vocabularies/agent/mimo.yml
+  mapping: vocabularies/agent/mimo.xsl
 
 # MIMO Concepts - Musical Instrument Museums Online
-- metadata: vacabularies/concept/mimo.yml
-  mapping: vacabularies/concept/mimo.xsl
+- metadata: vocabularies/concept/mimo.yml
+  mapping: vocabularies/concept/mimo.xsl
 
 # Partage Plus
-- metadata: vacabularies/concept/partage_plus.yml
-  mapping: vacabularies/concept/partage_plus.xsl
+- metadata: vocabularies/concept/partage_plus.yml
+  mapping: vocabularies/concept/partage_plus.xsl
 
 # RDA - Resource Description and Access
-- metadata: vacabularies/concept/rda.yml
-  mapping: vacabularies/concept/rda.xsl
+- metadata: vocabularies/concept/rda.yml
+  mapping: vocabularies/concept/rda.xsl
 
 # TGN - Getty vocabularies
-- metadata: vacabularies/place/tgn.yml
-  mapping: vacabularies/place/tgn.xsl
+- metadata: vocabularies/place/tgn.yml
+  mapping: vocabularies/place/tgn.xsl
 
 # UDC - Universal Decimal Classification
-- metadata: vacabularies/concept/udc.yml
-  mapping: vacabularies/concept/udc.xsl
+- metadata: vocabularies/concept/udc.yml
+  mapping: vocabularies/concept/udc.xsl
 
 # ULAN - Getty vocabularies
-- metadata: vacabularies/agent/ulan.yml
-  mapping: vacabularies/agent/ulan.xsl
+- metadata: vocabularies/agent/ulan.yml
+  mapping: vocabularies/agent/ulan.xsl
 
 # UNESCO - United Nations Educational, Scientific and Cultural Organization
-- metadata: vacabularies/concept/unesco.yml
-  mapping: vacabularies/concept/unesco.xsl
+- metadata: vocabularies/concept/unesco.yml
+  mapping: vocabularies/concept/unesco.xsl
 
 # VIAF - Virtual International Authority File
-- metadata: vacabularies/agent/viaf.yml
-  mapping: vacabularies/agent/viaf.xsl
+- metadata: vocabularies/agent/viaf.yml
+  mapping: vocabularies/agent/viaf.xsl
 
 # Wikidata
-- metadata: vacabularies/agent/wikidata.yml
-  mapping: vacabularies/agent/wikidata.xsl
+- metadata: vocabularies/agent/wikidata.yml
+  mapping: vocabularies/agent/wikidata.xsl
 
 # YSO - General Finnish Ontology
 - metadata: vocabularies/concept/yso.yml
