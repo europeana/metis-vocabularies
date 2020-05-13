@@ -1,0 +1,14 @@
+notifications:
+  email: false
+sudo: false
+language: java
+dist: bionic
+jdk:
+  - oraclejdk11
+cache:
+  directories:
+    - $HOME/.m2
+install: true
+script:
+  # Note: added the protocol restriction due to https://bugs.openjdk.java.net/browse/JDK-8213202
+  - mvn clean install -DskipITs -Dmaven.javadoc.skip=true -B -V -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
