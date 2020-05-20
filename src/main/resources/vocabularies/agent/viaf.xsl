@@ -8,8 +8,8 @@
     <xsl:param name="targetId"></xsl:param>
     <xsl:output indent="yes" encoding="UTF-8"></xsl:output>
     <xsl:template match="/rdf:RDF"><!-- Parent mapping: rdf:Description -> edm:Agent -->
-        <xsl:for-each select="./rdf:Description">
-            <xsl:if test="@rdf:about=$targetId">
+        <xsl:for-each select="./rdf:Description[@rdf:about=$targetId]">
+            <xsl:if test="rdf:type/@rdf:resource[.='http://schema.org/Person']">
                 <edm:Agent><!-- Attribute mapping: rdf:about -> rdf:about -->
                     <xsl:if test="@rdf:about">
                         <xsl:attribute name="rdf:about">
