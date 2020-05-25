@@ -1,10 +1,12 @@
 name: GNDSeriesOfConferenceOrEvent
 type: AGENT
 paths:
-- http://d-nb.info/gnd
+- https://d-nb.info/gnd
+examples:
+- https://d-nb.info/gnd/61577-8
 counterExamples:
-- http://d-nb.info/gnd/10000666-8
-- http://d-nb.info/gnd/100000541
-- http://d-nb.info/gnd/100006000
-- http://d-nb.info/gnd/1023810115
-- http://d-nb.info/gnd/4011882-4
+- https://d-nb.info/gnd/10000666-8
+- https://d-nb.info/gnd/100000541
+- https://d-nb.info/gnd/100006000
+- https://d-nb.info/gnd/1023810115
+- https://d-nb.info/gnd/4011882-4
