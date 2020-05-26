@@ -1,5 +1,6 @@
 name: RDA Carrier Type
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://rdaregistry.info/termList/RDACarrierType
 examples:

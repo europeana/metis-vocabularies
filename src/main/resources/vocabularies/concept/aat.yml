@@ -1,5 +1,6 @@
 name: AAT Concepts
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://vocab.getty.edu/aat
 examples:

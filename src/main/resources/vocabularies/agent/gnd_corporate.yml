@@ -1,5 +1,6 @@
 name: GNDCorporateBody
-type: AGENT
+types:
+- AGENT
 paths:
 - https://d-nb.info/gnd
 parentIterations: 1
@@ -11,3 +12,4 @@ counterExamples:
 - https://d-nb.info/gnd/1023810115
 - https://d-nb.info/gnd/4011882-4
 - https://d-nb.info/gnd/61577-8
+- https://d-nb.info/gnd/7864443-4

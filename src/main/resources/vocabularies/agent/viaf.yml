@@ -1,5 +1,6 @@
 name: VIAF
-type: AGENT
+types:
+- AGENT
 paths:
 - http://viaf.org/viaf/
 examples:

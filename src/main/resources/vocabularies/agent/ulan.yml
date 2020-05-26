@@ -1,5 +1,6 @@
 name: ULAN agents
-type: AGENT
+types:
+- AGENT
 paths:
 - http://vocab.getty.edu/ulan
 examples:

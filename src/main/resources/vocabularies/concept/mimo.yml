@@ -1,5 +1,6 @@
 name: MIMO-General
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://www.mimo-db.eu/InstrumentsKeywords
 - http://www.mimo-db.eu/HornbostelAndSachs

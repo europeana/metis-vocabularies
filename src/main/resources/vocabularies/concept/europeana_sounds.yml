@@ -1,5 +1,6 @@
 name: Sounds genres
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://data.europeana.eu/concept/soundgenres/
 examples:

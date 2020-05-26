@@ -1,5 +1,6 @@
 name: YSO
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://www.yso.fi/onto/yso/
 examples:

@@ -1,4 +1,5 @@
 name: Dismarc Genres
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://purl.org/dismarc/ns/dmGenres/

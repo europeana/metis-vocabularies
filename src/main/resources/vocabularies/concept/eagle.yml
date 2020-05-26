@@ -1,5 +1,6 @@
 name: EAGLE_vocabulary
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://www.eagle-network.eu/voc/material/lod/
 examples:

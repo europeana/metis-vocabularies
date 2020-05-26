@@ -1,5 +1,6 @@
 name: WWI Data Europeana from Loc
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://data.europeana.eu/concept/loc
 parentIterations: 1

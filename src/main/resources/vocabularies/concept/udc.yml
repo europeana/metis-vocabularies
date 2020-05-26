@@ -1,5 +1,6 @@
 name: UDC
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://udcdata.info/rdf
 examples:

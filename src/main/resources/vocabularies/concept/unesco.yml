@@ -1,5 +1,6 @@
 name: UNESCO
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://vocabularies.unesco.org/thesaurus/
 examples:

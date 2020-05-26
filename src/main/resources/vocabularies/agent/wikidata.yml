@@ -1,5 +1,6 @@
 name: Wikidata Agents
-type: AGENT
+types:
+- AGENT
 paths:
 - http://www.wikidata.org/entity/
 examples:

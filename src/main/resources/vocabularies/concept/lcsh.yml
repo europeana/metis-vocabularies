@@ -1,5 +1,6 @@
 name: LCSH Concepts
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://id.loc.gov/authorities/subjects/
 suffix: .skos.rdf

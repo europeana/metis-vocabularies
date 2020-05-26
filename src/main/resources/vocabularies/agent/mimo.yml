@@ -1,5 +1,6 @@
 name: MIMO-Person
-type: AGENT
+types:
+- AGENT
 paths:
 - http://www.mimo-db.eu/InstrumentMaker
 suffix: .rdf

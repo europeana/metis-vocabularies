@@ -1,5 +1,6 @@
 name: PartagePlus
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://partage.vocnet.org/
 examples:

@@ -1,5 +1,6 @@
 name: Israel Museum Jerusalem objects
-type: CONCEPT
+types:
+- CONCEPT
 paths:
 - http://www.imj.org.il/imagine/thesaurus/objects
 suffix: .rdf

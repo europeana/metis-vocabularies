@@ -1,5 +1,6 @@
 name: TGN places
-type: PLACE
+types:
+- PLACE
 paths:
 - http://vocab.getty.edu/tgn/
 examples:
