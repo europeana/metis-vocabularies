@@ -8,7 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>metis-vocabularies</name>
     <properties>
-        <metis.version>1.9.0-SNAPSHOT</metis.version>
+        <metis.version>1.10.0-SNAPSHOT</metis.version>
     </properties>
     <repositories>
         <repository>
@@ -54,7 +54,7 @@
                             <rules>
                                 <myCustomRule implementation="eu.europeana.metis.dereference.vocimport.VocabularyCollectionMavenRule">
                                     <lenientOnLackOfExamples>true</lenientOnLackOfExamples>
-                                    <lenientOnMappingTestFailures>true</lenientOnMappingTestFailures>
+                                    <lenientOnMappingTestFailures>false</lenientOnMappingTestFailures>
                                     <lenientOnExampleRetrievalFailures>true</lenientOnExampleRetrievalFailures>
                                     <vocabularyDirectoryFile>src/main/resources/directory.yml</vocabularyDirectoryFile>
                                 </myCustomRule>
