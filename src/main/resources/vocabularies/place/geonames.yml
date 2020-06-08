@@ -2,7 +2,8 @@ name: GeonamesVersion2
 types:
 - PLACE
 paths:
-- http://sws.geonames.org/
+- https://sws.geonames.org/
 parentIterations: 1
 examples:
-- http://sws.geonames.org/1123961/
+- https://sws.geonames.org/1123961/
+- https://sws.geonames.org/3175395/
