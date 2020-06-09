@@ -39,7 +39,10 @@ equivalent) that this vocabulary will apply to. These values function as prefixe
 least include the scheme and the host. This should be as precise as possible so that the vocabulary 
 is not triggered (and no expensive transformations are performed) unless strictly necessary. 
 Multiple values can be given, meaning that the vocabulary will be considered if an entity's ID 
-starts with either one of the given paths. At least one path must be given.
+starts with either one of the given paths. At least one path must be given. These paths may not 
+collide with each other or with paths from other vocabularies, in the sense that one is not allowed
+to be a substring of another. This guarantees that for any entity ID (`rdf:about`) there is always 
+at most one vocabulary that matches it.
 * **suffix** (String value): the suffix to be applied to the entity's ID value (`rdf:about`) in
 order to obtain a workable download URL. Common values are `.edm` or `.rdf`, but other values can
 be set. This field is optional (with the empty String as default value).  
@@ -74,7 +77,7 @@ counterExamples:
 - http://www.yso.fi/onto/yso/p105069
 ```
 
-Additionally, the file name (including the relative path) is guaranteed to be unique and will 
+Additionally, the file name (including the relative path) is guaranteed to be unique and may 
 therefore be used as unique identifier for the vocabulary. This means that it is not recommended to 
 change the name and location of these files without emptying the caches in the dereference service.
 
