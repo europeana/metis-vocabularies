@@ -30,29 +30,9 @@
 - metadata: vocabularies/place/geonames.yml
   mapping: vocabularies/place/geonames.xsl
 
-# GND Corporate Body (Deutsche Nationalbibliothek)
-- metadata: vocabularies/agent/gnd_corporate.yml
-  mapping: vocabularies/agent/gnd_corporate.xsl
-
-# GND Differentiated Person (Deutsche Nationalbibliothek)
-- metadata: vocabularies/agent/gnd_person.yml
-  mapping: vocabularies/agent/gnd_person.xsl
-
-# GND Royal or Member of a Royal House (Deutsche Nationalbibliothek)
-- metadata: vocabularies/agent/gnd_royal.yml
-  mapping: vocabularies/agent/gnd_royal.xsl
-
-# GND Series of Conference or Event (Deutsche Nationalbibliothek)
-- metadata: vocabularies/agent/gnd_event_series.yml
-  mapping: vocabularies/agent/gnd_event_series.xsl
-
-# GND Subject Headings Senso Stricto (Deutsche Nationalbibliothek)
-- metadata: vocabularies/concept/gnd_subject_headings.yml
-  mapping: vocabularies/concept/gnd_subject_headings.xsl
-
-# GND Territorial Corporate Body or Administrative Unit (Deutsche Nationalbibliothek)
-- metadata: vocabularies/place/gnd_territory.yml
-  mapping: vocabularies/place/gnd_territory.xsl
+# GND Collections (Deutsche Nationalbibliothek)
+- metadata: vocabularies/gnd/gnd.yml
+  mapping: vocabularies/gnd/gnd.xsl
 
 # Iconclass
 - metadata: vocabularies/concept/iconclass.yml
