@@ -83,8 +83,8 @@
   mapping: vocabularies/agent/viaf.xsl
 
 # Wikidata
-- metadata: vocabularies/agent/wikidata.yml
-  mapping: vocabularies/agent/wikidata.xsl
+- metadata: vocabularies/wikidata/wikidata.yml
+  mapping: vocabularies/wikidata/wikidata.xsl
 
 # YSO - General Finnish Ontology
 - metadata: vocabularies/concept/yso.yml

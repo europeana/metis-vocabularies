@@ -1,7 +1,0 @@
-name: Wikidata Agents
-types:
-- AGENT
-paths:
-- http://www.wikidata.org/entity/
-examples:
-- http://www.wikidata.org/entity/Q604667

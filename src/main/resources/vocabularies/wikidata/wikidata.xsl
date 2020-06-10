@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><xsl:stylesheet version="2.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:edm="http://www.europeana.eu/schemas/edm/"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-    xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:edm="http://www.europeana.eu/schemas/edm/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dcterms="http://purl.org/dc/terms/"
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
 
-    xmlns:fn="http://www.w3.org/2005/xpath-functions"
-    xmlns:doc="http://www.example.org/functions"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:fn="http://www.w3.org/2005/xpath-functions"
+        xmlns:doc="http://www.example.org/functions"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
-    xmlns:wdt="http://www.wikidata.org/prop/direct/"
-    xmlns:schema="http://schema.org/"
+        xmlns:wdt="http://www.wikidata.org/prop/direct/"
+        xmlns:schema="http://schema.org/"
 
-    xmlns:xalan="http://xml.apache.org/xalan"
-    xmlns:lib="http://example.org/lib"
+        xmlns:xalan="http://xml.apache.org/xalan"
+        xmlns:lib="http://example.org/lib"
 
-    exclude-result-prefixes="dcterms foaf wdt schema">
+        exclude-result-prefixes="dcterms foaf wdt schema">
 
     <xsl:output indent="yes" encoding="UTF-8"/>
 
@@ -41,7 +41,7 @@
     <xsl:template match="rdf:Description">
         <xsl:choose>
 
-        <!-- Agents: Individuals (real and fictional) -->
+            <!-- Agents: Individuals (real and fictional) -->
 
             <!-- instance of: Human (Q5), Fictional Human (Q15632617)
                             , Fictional Character (Q95074), Pen name (Q127843)
@@ -54,7 +54,7 @@
                 <xsl:call-template name="AgentIndividual"/>
             </xsl:when>
 
-        <!-- Agents: Organisations -->
+            <!-- Agents: Organisations -->
 
             <!-- containing property: P571 (inception), P576 (dissolved)
                                     , P452 (industry), P159 (headquarters location)
@@ -70,6 +70,13 @@
                                  or @rdf:resource='http://www.wikidata.org/entity/Q3661311']">
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
+
+            <!-- Concepts -->
+
+            <!-- everything else is mapped to concept -->
+            <xsl:otherwise>
+                <xsl:call-template name="Concept"/>
+            </xsl:otherwise>
 
         </xsl:choose>
 
@@ -186,14 +193,44 @@
         </edm:Agent>
     </xsl:template>
 
+    <xsl:template name="Concept">
+
+        <skos:Concept>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- labels -->
+            <xsl:call-template name="labels">
+                <xsl:with-param name="alt" select="skos:altLabel"/>
+            </xsl:call-template>
+
+            <xsl:for-each select="schema:description">
+                <xsl:if test="contains($langs,@xml:lang)">
+                    <xsl:element name="skos:note">
+                        <xsl:copy-of select="@xml:lang"/>
+                        <xsl:value-of select="."/>
+                    </xsl:element>
+                </xsl:if>
+            </xsl:for-each>
+
+            <xsl:for-each select="wdt:P31 | wdt:P279 | wdt:P2445">
+                <xsl:element name="skos:broader">
+                    <xsl:copy-of select="@rdf:resource"/>
+                </xsl:element>
+            </xsl:for-each>
+
+        </skos:Concept>
+
+    </xsl:template>
+
 
     <!-- FUNCTIONS -->
- 
+
     <xsl:template name="labels">
         <xsl:param name="alt"/>
 
         <xsl:variable name="labels"
-                      select="rdfs:label[contains($langs,@xml:lang)]"/>
+                select="rdfs:label[contains($langs,@xml:lang)]"/>
 
         <xsl:for-each select="$labels">
             <xsl:element name="skos:prefLabel">
