@@ -41,7 +41,11 @@
     <xsl:template match="rdf:Description">
         <xsl:choose>
 
-            <!-- Agents: Individuals (real and fictional) -->
+            <xsl:when test="count(*[fn:namespace-uri()!='http://www.wikidata.org/prop/'
+                                and fn:name()!='rdf:type'])=0">
+            </xsl:when>
+
+                <!-- Agents: Individuals (real and fictional) -->
 
             <!-- instance of: Human (Q5), Fictional Human (Q15632617)
                             , Fictional Character (Q95074), Pen name (Q127843)
