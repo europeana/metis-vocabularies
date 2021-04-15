@@ -114,10 +114,9 @@
 
         <!-- Agents: Organisations -->
 
-            <!-- containing property: P576 (dissolved)
-                                    , P452 (industry), P159 (headquarters location)
+            <!-- containing property: P576 (dissolved), P159 (headquarters location)
                                     , P749 (parent organisation), P1128 (employees) -->
-            <xsl:when test="wdt:P576 | wdt:P452 | wdt:P159 | wdt:P749 | wdt:P1128">
+            <xsl:when test="wdt:P576 | wdt:P159 | wdt:P749 | wdt:P1128">
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
 
