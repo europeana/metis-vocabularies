@@ -2,6 +2,7 @@ name: EAGLE_vocabulary
 types:
 - CONCEPT
 paths:
-- http://www.eagle-network.eu/voc/material/lod/
+- https://www.eagle-network.eu/voc/material/lod/
+suffix: .rdf
 examples:
-- http://www.eagle-network.eu/voc/material/lod/113
+- https://www.eagle-network.eu/voc/material/lod/113
