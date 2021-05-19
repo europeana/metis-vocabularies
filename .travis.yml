@@ -11,4 +11,4 @@ cache:
 install: true
 script:
   # Note: added the protocol restriction due to https://bugs.openjdk.java.net/browse/JDK-8213202
-  - mvn clean install -DskipITs -Dmaven.javadoc.skip=true -B -V -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
+  - mvn clean install -DskipITs -Dmaven.javadoc.skip=true -B -V -U -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
