@@ -87,10 +87,21 @@
     </xsl:template>
 
     <xsl:template match="rdf:RDF">
-        <xsl:apply-templates select="rdf:Description[@rdf:about=$targetId]"/>
+        <xsl:variable name="props" select="rdf:Description[@rdf:about=$targetId]/*"/>
+        <xsl:if test="$props">
+            <xsl:variable name="entity">
+                <rdf:Description>
+                    <xsl:attribute name="rdf:about" select="$targetId"/>
+                    <xsl:copy-of select="$props"/>
+                </rdf:Description>
+            </xsl:variable>
+            <xsl:for-each select="$entity/rdf:Description">
+                <xsl:call-template name="Entity"/>
+            </xsl:for-each>
+        </xsl:if>
     </xsl:template>
 
-    <xsl:template match="rdf:Description">
+    <xsl:template name="Entity">
         <xsl:choose>
 
         <!-- To avoid mapping Wikidata Properties by default to Concepts -->
