@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Document   : wikidata.xsl
+  Author     : hmanguinhas
+  Created on : October 13, 2019
+  Updated on : March 16, 2021
+  
+  https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
+-->
+
 <xsl:stylesheet version="2.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:edm="http://www.europeana.eu/schemas/edm/"
@@ -28,6 +38,8 @@
     <xsl:param name="coref" select="true()"/>
 
     <xsl:variable name="namespace" select="'http://www.wikidata.org/prop/direct/'"/>
+    <xsl:variable name="wiki"      select="'https://en.wikipedia.org/wiki/'"/>
+    <xsl:variable name="dbp"       select="'http://dbpedia.org/resource/'"/>
 
     <!-- Portal languages (27) -->
     <xsl:variable name="langs">en,pl,de,nl,fr,it,da,sv,el,fi,hu,cs,sl,et,pt,es,lt,lv,bg,ro,sk,hr,ga,mt,no,ca,ru</xsl:variable>
@@ -55,7 +67,7 @@
         <entry key="P1256">http://iconclass.org/$1</entry>
         <entry key="P1260">http://kulturarvsdata.se/$1</entry>
         <entry key="P1422">http://ta.sandrart.net/-person-$1</entry>
-        <entry key="P1566">http://sws.geonames.org/$1/</entry>
+        <entry key="P1566">https://sws.geonames.org/$1/</entry>
         <entry key="P1584">http://pleiades.stoa.org/places/$1/rdf</entry>
         <entry key="P1667">http://vocab.getty.edu/tgn/$1</entry>
         <entry key="P1802">urn:uuid:$1</entry>
@@ -82,26 +94,34 @@
         <entry key="P6293">http://www.yso.fi/onto/ysa/$1</entry>
     </xsl:variable>
 
+    <xsl:variable name="articles" 
+                  select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://schema.org/Article']"/>
+
     <xsl:template match="/">
         <xsl:apply-templates select="rdf:RDF"/>
     </xsl:template>
 
     <xsl:template match="rdf:RDF">
+
         <xsl:variable name="props" select="rdf:Description[@rdf:about=$targetId]/*"/>
+
         <xsl:if test="$props">
-            <xsl:variable name="entity">
-                <rdf:Description>
-                    <xsl:attribute name="rdf:about" select="$targetId"/>
-                    <xsl:copy-of select="$props"/>
-                </rdf:Description>
-            </xsl:variable>
-            <xsl:for-each select="$entity/rdf:Description">
-                <xsl:call-template name="Entity"/>
-            </xsl:for-each>
+	        <xsl:variable name="entity">
+	            <rdf:Description>
+	                <xsl:attribute name="rdf:about" select="$targetId"/>
+	                <xsl:copy-of select="$props"/>                
+	            </rdf:Description>
+	        </xsl:variable>
+	
+	        <xsl:for-each select="$entity/rdf:Description">
+		        <xsl:call-template name="Entity"/>
+	        </xsl:for-each>
         </xsl:if>
+
     </xsl:template>
 
     <xsl:template name="Entity">
+
         <xsl:choose>
 
         <!-- To avoid mapping Wikidata Properties by default to Concepts -->
@@ -137,13 +157,22 @@
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
 
+        <!-- Agents: Groups -->
+
+            <!-- containing property: P527 (part) -->
+            <!-- need to check against Places 
+            <xsl:when test="wdt:P527">
+                <xsl:call-template name="AgentOrganization"/>
+            </xsl:when>
+            -->
+
         <!-- TimeSpan -->
 
             <!-- instance of: century, millennium, archaeological period, historical period -->
             <xsl:when test="wdt:P31[@rdf:resource='http://www.wikidata.org/entity/Q578'
-                                or @rdf:resource='http://www.wikidata.org/entity/Q36507'
-                                or @rdf:resource='http://www.wikidata.org/entity/Q15401633'
-                                or @rdf:resource='http://www.wikidata.org/entity/Q11514315']">
+                                 or @rdf:resource='http://www.wikidata.org/entity/Q36507'
+                                 or @rdf:resource='http://www.wikidata.org/entity/Q15401633'
+                                 or @rdf:resource='http://www.wikidata.org/entity/Q11514315']">
                 <xsl:call-template name="TimeSpan"/>
             </xsl:when>
 
@@ -221,6 +250,10 @@
 	                <xsl:with-param name="target" select="'owl:sameAs'"/>
 	            </xsl:call-template>
 	        </xsl:if>
+
+            <xsl:call-template name="DBpedia">
+                <xsl:with-param name="uri" select="@rdf:about"/>
+            </xsl:call-template>
 
         </edm:Agent>
     </xsl:template>
@@ -349,6 +382,10 @@
 	            </xsl:call-template>
 	        </xsl:if>
 
+            <xsl:call-template name="DBpedia">
+                <xsl:with-param name="uri" select="@rdf:about"/>
+            </xsl:call-template>
+
         </edm:Agent>
     </xsl:template>
 
@@ -374,21 +411,19 @@
             <!-- coordinate location -->
             <xsl:for-each select="wdt:P625">
                 <xsl:variable name="dt"    select="@rdf:datatype"/>
-                <xsl:choose>
-                    <xsl:when test="$dt='http://www.opengis.net/ont/geosparql#wktLiteral'">
-                        <xsl:variable name="coord" select="string(text())"/>
-                        <xsl:variable name="lat"   select="lib:geo2coord($coord,1)"/>
-                        <xsl:variable name="long"  select="lib:geo2coord($coord,2)"/>
-                        <xsl:if test="$lat and $long">
-                            <xsl:element name="wgs84_pos:long">
-                                <xsl:value-of select="$long"/>
-                            </xsl:element>
-                            <xsl:element name="wgs84_pos:lat">
-                                <xsl:value-of select="$lat"/>
-                            </xsl:element>
-                        </xsl:if>
-                    </xsl:when>
-                </xsl:choose>
+                <xsl:if test="$dt='http://www.opengis.net/ont/geosparql#wktLiteral'">
+                    <xsl:variable name="coord" select="string(text())"/>
+                    <xsl:variable name="long"  select="lib:geo2coord($coord,1)"/>
+                    <xsl:variable name="lat"   select="lib:geo2coord($coord,2)"/>
+                    <xsl:if test="$lat and $long">
+                        <xsl:element name="wgs84_pos:long">
+                            <xsl:value-of select="$long"/>
+                        </xsl:element>
+                        <xsl:element name="wgs84_pos:lat">
+                            <xsl:value-of select="$lat"/>
+                        </xsl:element>
+                    </xsl:if>
+                </xsl:if>
             </xsl:for-each>
 
             <xsl:for-each select="wdt:P2044">
@@ -437,6 +472,10 @@
 	                <xsl:with-param name="target" select="'owl:sameAs'"/>
 	            </xsl:call-template>
 	        </xsl:if>
+
+            <xsl:call-template name="DBpedia">
+                <xsl:with-param name="uri" select="@rdf:about"/>
+            </xsl:call-template>
 
         </edm:Place>
     </xsl:template>
@@ -492,6 +531,10 @@
 	                <xsl:with-param name="target" select="'owl:sameAs'"/>
 	            </xsl:call-template>
 	        </xsl:if>
+
+            <xsl:call-template name="DBpedia">
+                <xsl:with-param name="uri" select="@rdf:about"/>
+            </xsl:call-template>
 
         </edm:TimeSpan>
     </xsl:template>
@@ -549,13 +592,30 @@
 	            </xsl:call-template>
 	        </xsl:if>
 
+            <xsl:call-template name="DBpedia">
+                <xsl:with-param name="uri" select="@rdf:about"/>
+            </xsl:call-template>
+
         </skos:Concept>
 
     </xsl:template>
 
-
-    <!-- FUNCTIONS -->
+    <!--                           FUNCTIONS                                 -->
  
+    <xsl:template name="DBpedia">
+        <xsl:param name="uri"/>
+
+        <xsl:for-each select="$articles[schema:about/@rdf:resource=$uri
+                                    and contains(@rdf:about,$wiki)]">
+            <xsl:element name="owl:sameAs">
+                <xsl:attribute name="rdf:resource">
+                    <xsl:value-of select="replace(@rdf:about,$wiki,$dbp)"/>
+                </xsl:attribute>
+            </xsl:element>
+        </xsl:for-each>
+
+     </xsl:template>
+
     <xsl:template name="labels">
         <xsl:param name="alt"/>
 
@@ -585,7 +645,7 @@
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
 
-        <xsl:value-of select="contains($langs,lower-case($string))"/>
+        <xsl:value-of select="$string!='' and contains($langs,lower-case($string))"/>
     </xsl:function>
 
      <xsl:function name="lib:geo2coord" as="xs:string">
@@ -598,13 +658,13 @@
 	                <xsl:value-of select="'$1'"/>
 	            </xsl:when>
 	            <xsl:when test="$index=2">
-	                <xsl:value-of select="'$2'"/>
+	                <xsl:value-of select="'$3'"/>
 	            </xsl:when>
 	        </xsl:choose>
         </xsl:variable>
 
 
-        <xsl:value-of select="replace($value, '\s*Point[(]\s*([-+]?\d+[.]\d+)\s+([-+]?\d+[.]\d+)\s*[)]\s*', $replace)"/>
+        <xsl:value-of select="replace($value, '\s*Point[(]\s*([-+]?\d+([.]\d+)?)\s+([-+]?\d+([.]\d+)?)\s*[)]\s*', $replace)"/>
 
     </xsl:function>
 
