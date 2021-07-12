@@ -33,18 +33,8 @@
     </xsl:template>
 
     <xsl:template match="rdf:RDF">
-        <rdf:RDF>
-            <xsl:choose>
-                <xsl:when test="$targetId">
-                    <xsl:apply-templates select="gn:Feature[@rdf:about=$targetId]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="gn:Feature"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </rdf:RDF>
+        <xsl:apply-templates select="gn:Feature[@rdf:about=$targetId]"/>
     </xsl:template>
-    
 
     <xsl:template match="gn:Feature">
 
@@ -131,8 +121,7 @@
 
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
-
-        <xsl:value-of select="$string!='' and contains($langs,lower-case($string))"/>
+        <xsl:sequence select="$string!='' and contains($langs,lower-case($string))"/>
      </xsl:function>
 
 </xsl:stylesheet>
