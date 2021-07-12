@@ -644,8 +644,7 @@
 
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
-
-        <xsl:value-of select="$string!='' and contains($langs,lower-case($string))"/>
+        <xsl:sequence select="$string!='' and contains($langs,lower-case($string))"/>
     </xsl:function>
 
      <xsl:function name="lib:geo2coord" as="xs:string">
