@@ -482,7 +482,7 @@
 
     <xsl:template name="TimeSpan">
 
-        <edm:TimeSpan>
+        <edm:Timespan>
 
             <xsl:copy-of select="@rdf:about"/>
 
@@ -536,7 +536,7 @@
                 <xsl:with-param name="uri" select="@rdf:about"/>
             </xsl:call-template>
 
-        </edm:TimeSpan>
+        </edm:Timespan>
     </xsl:template>
 
     <xsl:template name="Concept">
