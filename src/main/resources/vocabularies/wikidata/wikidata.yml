@@ -7,6 +7,7 @@ types:
 paths:
 - http://www.wikidata.org/entity/
 examples:
+- http://www.wikidata.org/entity/Q3930
 - http://www.wikidata.org/entity/Q604667
 - http://www.wikidata.org/entity/Q79007
 - http://www.wikidata.org/entity/Q1261026
@@ -14,3 +15,4 @@ examples:
 - http://www.wikidata.org/entity/Q6927
 - http://www.wikidata.org/entity/Q90
 - http://www.wikidata.org/entity/Q187843
+- http://www.wikidata.org/entity/Q145

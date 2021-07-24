@@ -10,27 +10,27 @@
 -->
 
 <xsl:stylesheet version="2.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:edm="http://www.europeana.eu/schemas/edm/"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-    xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
-    xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:edm="http://www.europeana.eu/schemas/edm/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dcterms="http://purl.org/dc/terms/"
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
+        xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
 
-    xmlns:fn="http://www.w3.org/2005/xpath-functions"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:fn="http://www.w3.org/2005/xpath-functions"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
-    xmlns:wdt="http://www.wikidata.org/prop/direct/"
-    xmlns:schema="http://schema.org/"
+        xmlns:wdt="http://www.wikidata.org/prop/direct/"
+        xmlns:schema="http://schema.org/"
 
-    xmlns:lib="http://example.org/lib"
+        xmlns:lib="http://example.org/lib"
 
-    exclude-result-prefixes="wdt schema lib xs fn">
+        exclude-result-prefixes="wdt schema lib xs fn">
 
     <xsl:output indent="yes" encoding="UTF-8"/>
 
@@ -50,6 +50,7 @@
         <entry key="P227">http://d-nb.info/gnd/$1</entry>
         <entry key="P244">http://id.loc.gov/authorities/names/$1</entry>
         <entry key="P245">http://vocab.getty.edu/ulan/$1</entry>
+        <entry key="P268">http://data.bnf.fr/ark:/12148/cb$1</entry>
         <entry key="P269">http://www.idref.fr/$1/id</entry>
         <entry key="P349">http://id.ndl.go.jp/auth/ndlna/$1</entry>
         <entry key="P486">http://id.nlm.nih.gov/mesh/$1</entry>
@@ -94,8 +95,8 @@
         <entry key="P6293">http://www.yso.fi/onto/ysa/$1</entry>
     </xsl:variable>
 
-    <xsl:variable name="articles" 
-                  select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://schema.org/Article']"/>
+    <xsl:variable name="articles"
+            select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://schema.org/Article']"/>
 
     <xsl:template match="/">
         <xsl:apply-templates select="rdf:RDF"/>
@@ -106,44 +107,47 @@
         <xsl:variable name="props" select="rdf:Description[@rdf:about=$targetId]/*"/>
 
         <xsl:if test="$props">
-	        <xsl:variable name="entity">
-	            <rdf:Description>
-	                <xsl:attribute name="rdf:about" select="$targetId"/>
-	                <xsl:copy-of select="$props"/>                
-	            </rdf:Description>
-	        </xsl:variable>
-	
-	        <xsl:for-each select="$entity/rdf:Description">
-		        <xsl:call-template name="Entity"/>
-	        </xsl:for-each>
+            <xsl:variable name="entity">
+                <rdf:Description>
+                    <xsl:attribute name="rdf:about" select="$targetId"/>
+                    <xsl:copy-of select="$props"/>
+                </rdf:Description>
+            </xsl:variable>
+
+            <xsl:for-each select="$entity/rdf:Description">
+                <xsl:call-template name="Entity"/>
+            </xsl:for-each>
         </xsl:if>
 
     </xsl:template>
 
     <xsl:template name="Entity">
 
+        <!--  for convenience, readability and performance -->
+        <xsl:variable name="instanceOf" select="wdt:P31"/>
+
         <xsl:choose>
 
-        <!-- To avoid mapping Wikidata Properties by default to Concepts -->
+            <!-- To avoid mapping Wikidata Properties by default to Concepts -->
 
             <xsl:when test="count(*[namespace-uri()!='http://www.wikidata.org/prop/'
                                 and name()!='rdf:type'])=0">
             </xsl:when>
 
-        <!-- Agents: Individuals (real and fictional) -->
+            <!-- Agents: Individuals (real and fictional) -->
 
             <!-- instance of: Human (Q5), Fictional Human (Q15632617)
                             , Fictional Character (Q95074), Pen name (Q127843)
                             , Heteronym (Q1136342) -->
-            <xsl:when test="wdt:P31[@rdf:resource='http://www.wikidata.org/entity/Q5'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q15632617'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q95074'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q127843'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q1136342']">
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q5'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q15632617'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q95074'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q127843'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q1136342']">
                 <xsl:call-template name="AgentIndividual"/>
             </xsl:when>
 
-        <!-- Agents: Organisations -->
+            <!-- Agents: Organisations -->
 
             <!-- containing property: P576 (dissolved), P159 (headquarters location)
                                     , P749 (parent organisation), P1128 (employees) -->
@@ -152,37 +156,49 @@
             </xsl:when>
 
             <!-- instance of: Fashion label (Q1618899), Fashion House (Q3661311) -->
-            <xsl:when test="wdt:P31[@rdf:resource='http://www.wikidata.org/entity/Q1618899'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q3661311']">
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q1618899'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q3661311']">
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
 
-        <!-- Agents: Groups -->
+            <!-- Agents: Groups -->
 
             <!-- containing property: P527 (part) -->
-            <!-- need to check against Places 
+            <!-- need to check against Places
             <xsl:when test="wdt:P527">
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
             -->
 
-        <!-- TimeSpan -->
+            <!-- TimeSpan -->
 
-            <!-- instance of: century, millennium, archaeological period, historical period -->
-            <xsl:when test="wdt:P31[@rdf:resource='http://www.wikidata.org/entity/Q578'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q36507'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q15401633'
-                                 or @rdf:resource='http://www.wikidata.org/entity/Q11514315']">
+            <!-- instance of: century, millennium, archaeological period, time interval, era -->
+            <!--
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q578'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q36507'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q15401633'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q186081'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q6428674']">
+             -->
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q578'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q36507']">
                 <xsl:call-template name="TimeSpan"/>
             </xsl:when>
 
-        <!-- Places -->
+            <!-- instance of: historical period BUT WITH EXCEPTIONS -->
+            <!--
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q11514315'] and not
+                            ($instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q968159'])">
+                <xsl:call-template name="TimeSpan"/>
+            </xsl:when>
+             -->
+            <!-- Places -->
             <xsl:when test="wdt:P625">
                 <xsl:call-template name="Place"/>
             </xsl:when>
 
-        <!-- Concepts -->
-        
+            <!-- Concepts -->
+
             <!-- everything else is mapped to concept -->
             <xsl:otherwise>
                 <xsl:call-template name="Concept"/>
@@ -206,7 +222,7 @@
 
             <!-- descriptions -->
             <xsl:for-each select="schema:description">
-                <xsl:if test="contains($langs,@xml:lang)">
+                <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
                     <xsl:element name="skos:note">
                         <xsl:copy-of select="@xml:lang"/>
                         <xsl:value-of select="."/>
@@ -240,16 +256,16 @@
 
             <!-- Co-referencing -->
             <xsl:if test="$coref">
-	            <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
-	                <xsl:element name="owl:sameAs">
-	                    <xsl:copy-of select="@rdf:resource"/>
-	                </xsl:element>
-	            </xsl:for-each>
-	            <xsl:call-template name="coref">
-	                <xsl:with-param name="current" select="."/>
-	                <xsl:with-param name="target" select="'owl:sameAs'"/>
-	            </xsl:call-template>
-	        </xsl:if>
+                <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
+                    <xsl:element name="owl:sameAs">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:for-each>
+                <xsl:call-template name="coref">
+                    <xsl:with-param name="current" select="."/>
+                    <xsl:with-param name="target" select="'owl:sameAs'"/>
+                </xsl:call-template>
+            </xsl:if>
 
             <xsl:call-template name="DBpedia">
                 <xsl:with-param name="uri" select="@rdf:about"/>
@@ -270,7 +286,7 @@
 
             <!-- description -->
             <xsl:for-each select="schema:description">
-                <xsl:if test="contains($langs,@xml:lang)">
+                <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
                     <xsl:element name="skos:note">
                         <xsl:copy-of select="@xml:lang"/>
                         <xsl:value-of select="."/>
@@ -303,7 +319,7 @@
                 </xsl:element>
             </xsl:for-each>
             <xsl:for-each select="wdt:P20">
-                <xsl:element name="rdaGr2:placeOfBirth">
+                <xsl:element name="rdaGr2:placeOfDeath">
                     <xsl:copy-of select="@rdf:resource"/>
                 </xsl:element>
             </xsl:for-each>
@@ -370,17 +386,17 @@
             <!-- Co-referencing -->
 
             <xsl:if test="$coref">
-	            <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
-	                <xsl:element name="owl:sameAs">
-	                    <xsl:copy-of select="@rdf:resource"/>
-	                </xsl:element>
-	            </xsl:for-each>
-	
-	            <xsl:call-template name="coref">
-	                <xsl:with-param name="current" select="."/>
-	                <xsl:with-param name="target" select="'owl:sameAs'"/>
-	            </xsl:call-template>
-	        </xsl:if>
+                <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
+                    <xsl:element name="owl:sameAs">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:for-each>
+
+                <xsl:call-template name="coref">
+                    <xsl:with-param name="current" select="."/>
+                    <xsl:with-param name="target" select="'owl:sameAs'"/>
+                </xsl:call-template>
+            </xsl:if>
 
             <xsl:call-template name="DBpedia">
                 <xsl:with-param name="uri" select="@rdf:about"/>
@@ -400,7 +416,7 @@
 
             <!-- descriptions -->
             <xsl:for-each select="schema:description">
-                <xsl:if test="lib:isAcceptableLang">
+                <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
                     <xsl:element name="skos:note">
                         <xsl:copy-of select="@xml:lang"/>
                         <xsl:value-of select="."/>
@@ -437,41 +453,41 @@
             <xsl:choose>
                 <xsl:when test="wdt:P361">
                     <xsl:for-each select="wdt:P361">
-	                    <xsl:element name="dcterms:isPartOf">
-	                        <xsl:copy-of select="@rdf:resource"/>
-	                    </xsl:element>
-	                </xsl:for-each>
+                        <xsl:element name="dcterms:isPartOf">
+                            <xsl:copy-of select="@rdf:resource"/>
+                        </xsl:element>
+                    </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="wdt:P17">
                     <xsl:for-each select="wdt:P17">
-	                    <xsl:element name="dcterms:isPartOf">
-	                        <xsl:copy-of select="@rdf:resource"/>
-	                    </xsl:element>
-	                </xsl:for-each>
+                        <xsl:element name="dcterms:isPartOf">
+                            <xsl:copy-of select="@rdf:resource"/>
+                        </xsl:element>
+                    </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="wdt:P30">
                     <xsl:for-each select="wdt:P30">
-	                    <xsl:element name="dcterms:isPartOf">
-	                        <xsl:copy-of select="@rdf:resource"/>
-	                    </xsl:element>
-	                </xsl:for-each>
+                        <xsl:element name="dcterms:isPartOf">
+                            <xsl:copy-of select="@rdf:resource"/>
+                        </xsl:element>
+                    </xsl:for-each>
                 </xsl:when>
             </xsl:choose>
 
             <!-- Co-referencing -->
 
             <xsl:if test="$coref">
-	            <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
-	                <xsl:element name="owl:sameAs">
-	                    <xsl:copy-of select="@rdf:resource"/>
-	                </xsl:element>
-	            </xsl:for-each>
-	
-	            <xsl:call-template name="coref">
-	                <xsl:with-param name="current" select="."/>
-	                <xsl:with-param name="target" select="'owl:sameAs'"/>
-	            </xsl:call-template>
-	        </xsl:if>
+                <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
+                    <xsl:element name="owl:sameAs">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:for-each>
+
+                <xsl:call-template name="coref">
+                    <xsl:with-param name="current" select="."/>
+                    <xsl:with-param name="target" select="'owl:sameAs'"/>
+                </xsl:call-template>
+            </xsl:if>
 
             <xsl:call-template name="DBpedia">
                 <xsl:with-param name="uri" select="@rdf:about"/>
@@ -520,17 +536,17 @@
             <!-- Co-referencing -->
 
             <xsl:if test="$coref">
-	            <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
-	                <xsl:element name="owl:sameAs">
-	                    <xsl:copy-of select="@rdf:resource"/>
-	                </xsl:element>
-	            </xsl:for-each>
-	
-	            <xsl:call-template name="coref">
-	                <xsl:with-param name="current" select="."/>
-	                <xsl:with-param name="target" select="'owl:sameAs'"/>
-	            </xsl:call-template>
-	        </xsl:if>
+                <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
+                    <xsl:element name="owl:sameAs">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:for-each>
+
+                <xsl:call-template name="coref">
+                    <xsl:with-param name="current" select="."/>
+                    <xsl:with-param name="target" select="'owl:sameAs'"/>
+                </xsl:call-template>
+            </xsl:if>
 
             <xsl:call-template name="DBpedia">
                 <xsl:with-param name="uri" select="@rdf:about"/>
@@ -551,7 +567,7 @@
             </xsl:call-template>
 
             <xsl:for-each select="schema:description">
-                <xsl:if test="lib:isAcceptableLang(@xml:lang)">
+                <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
                     <xsl:element name="skos:note">
                         <xsl:copy-of select="@xml:lang"/>
                         <xsl:value-of select="."/>
@@ -565,7 +581,7 @@
                 </xsl:element>
             </xsl:for-each>
 
-        <!-- Relationships with other concepts -->
+            <!-- Relationships with other concepts -->
 
             <xsl:for-each select="wdt:PP135 | wdt:P136 | wdt:P144 | wdt:P155
                                 | wdt:P156 | wdt:P361 | wdt:P527 | wdt:P737
@@ -576,21 +592,21 @@
                 </xsl:element>
             </xsl:for-each>
 
-        <!-- Co-referencing -->
+            <!-- Co-referencing -->
 
             <xsl:if test="$coref">
-	            <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
-	                <xsl:element name="skos:exactMatch">
-	                    <xsl:copy-of select="@rdf:resource"/>
-	                </xsl:element>
-	            </xsl:for-each>
-	
-	
-	            <xsl:call-template name="coref">
-	                <xsl:with-param name="current" select="."/>
-	                <xsl:with-param name="target" select="'skos:exactMatch'"/>
-	            </xsl:call-template>
-	        </xsl:if>
+                <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
+                    <xsl:element name="skos:exactMatch">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:for-each>
+
+
+                <xsl:call-template name="coref">
+                    <xsl:with-param name="current" select="."/>
+                    <xsl:with-param name="target" select="'skos:exactMatch'"/>
+                </xsl:call-template>
+            </xsl:if>
 
             <xsl:call-template name="DBpedia">
                 <xsl:with-param name="uri" select="@rdf:about"/>
@@ -601,7 +617,7 @@
     </xsl:template>
 
     <!--                           FUNCTIONS                                 -->
- 
+
     <xsl:template name="DBpedia">
         <xsl:param name="uri"/>
 
@@ -614,13 +630,14 @@
             </xsl:element>
         </xsl:for-each>
 
-     </xsl:template>
+    </xsl:template>
 
     <xsl:template name="labels">
         <xsl:param name="alt"/>
 
         <xsl:variable name="labels"
-                      select="rdfs:label[lib:isAcceptableLang(@xml:lang)]"/>
+                select="rdfs:label[lib:isAcceptableLang(@xml:lang)
+                                     and lib:isAcceptableLabel(text())]"/>
 
         <xsl:for-each select="$labels">
             <xsl:element name="skos:prefLabel">
@@ -632,7 +649,9 @@
         <xsl:for-each select="$alt">
             <xsl:variable name="literal" select="text()"/>
             <xsl:variable name="lang"    select="@xml:lang"/>
-            <xsl:if test="lib:isAcceptableLang($lang) and not($labels[text()=$literal and @xml:lang=$lang])">
+            <xsl:if test="lib:isAcceptableLang($lang)
+                   and lib:isAcceptableLabel($literal)
+                   and not($labels[text()=$literal and @xml:lang=$lang])">
                 <xsl:element name="skos:altLabel">
                     <xsl:copy-of select="@xml:lang"/>
                     <xsl:value-of select="$literal" />
@@ -644,22 +663,29 @@
 
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
+
         <xsl:sequence select="$string!='' and contains($langs,lower-case($string))"/>
     </xsl:function>
 
-     <xsl:function name="lib:geo2coord" as="xs:string">
+    <xsl:function name="lib:isAcceptableLabel" as="xs:boolean">
+        <xsl:param name="string"/>
+
+        <xsl:sequence select="matches($string,'[\p{L}\p{N}]')"/>
+    </xsl:function>
+
+    <xsl:function name="lib:geo2coord" as="xs:string">
         <xsl:param    name="value"/>
         <xsl:param    name="index"/>
 
         <xsl:variable name="replace">
-	        <xsl:choose>
-	            <xsl:when test="$index=1">
-	                <xsl:value-of select="'$1'"/>
-	            </xsl:when>
-	            <xsl:when test="$index=2">
-	                <xsl:value-of select="'$3'"/>
-	            </xsl:when>
-	        </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="$index=1">
+                    <xsl:value-of select="'$1'"/>
+                </xsl:when>
+                <xsl:when test="$index=2">
+                    <xsl:value-of select="'$3'"/>
+                </xsl:when>
+            </xsl:choose>
         </xsl:variable>
 
 
@@ -682,8 +708,8 @@
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
- 
-     <xsl:function name="lib:mapLD" as="xs:string">
+
+    <xsl:function name="lib:mapLD" as="xs:string">
         <xsl:param    name="pattern"/>
         <xsl:param    name="value"/>
 
@@ -691,13 +717,13 @@
 
         <xsl:choose>
             <xsl:when test="starts-with($value,$base)">
-               <xsl:value-of select="$value"/>
+                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="fn:replace($pattern,'[$]1',$value)"/>
+                <xsl:value-of select="fn:replace($pattern,'[$]1',$value)"/>
             </xsl:otherwise>
         </xsl:choose>
 
-     </xsl:function>
+    </xsl:function>
 
 </xsl:stylesheet>
