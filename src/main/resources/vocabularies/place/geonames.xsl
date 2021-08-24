@@ -44,7 +44,7 @@
 
             <!-- labels -->
             <xsl:call-template name="labels">
-                <xsl:with-param name="pref" select="gn:officialName"/>
+                <xsl:with-param name="pref" select="gn:name|gn:officialName"/>
                 <xsl:with-param name="alt"  select="gn:alternateName|gn:colloquialName|gn:historicalName|gn:shortName"/>
             </xsl:call-template>
 
@@ -98,12 +98,24 @@
         <xsl:variable name="labels"
                       select="$pref[lib:isAcceptableLang(@xml:lang)]"/>
 
-        <xsl:for-each select="$labels">
-            <xsl:element name="skos:prefLabel">
-                <xsl:copy-of select="@xml:lang"/>
-                <xsl:value-of select="."/>
-            </xsl:element>
-        </xsl:for-each>
+        <xsl:choose>
+            <xsl:when test="$labels">
+                <xsl:for-each select="$labels">
+                    <xsl:element name="skos:prefLabel">
+                        <xsl:copy-of select="@xml:lang"/>
+                        <xsl:value-of select="."/>
+                    </xsl:element>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select="$pref">
+                    <xsl:element name="skos:prefLabel">
+                        <xsl:copy-of select="@xml:lang"/>
+                        <xsl:value-of select="."/>
+                    </xsl:element>
+                </xsl:for-each>
+            </xsl:otherwise>
+        </xsl:choose>
 
         <xsl:for-each select="$alt">
             <xsl:variable name="literal" select="text()"/>
@@ -122,6 +134,6 @@
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
         <xsl:sequence select="$string!='' and contains($langs,lower-case($string))"/>
-     </xsl:function>
+    </xsl:function>
 
 </xsl:stylesheet>
