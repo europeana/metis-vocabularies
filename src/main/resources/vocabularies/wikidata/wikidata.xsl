@@ -378,9 +378,11 @@
 
             <xsl:for-each select="wdt:P135 | wdt:P136 | wdt:P1066 | wdt:P607
                                 | wdt:P1303 | wdt:P641 | wdt:P2416 | wdt:P2650">
-                <xsl:element name="edm:hasMet">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:if test="@rdf:resource">
+                    <xsl:element name="edm:hasMet">
+                        <xsl:copy-of select="@rdf:resource"/>
+                    </xsl:element>
+                </xsl:if>
             </xsl:for-each>
 
             <!-- Co-referencing -->
