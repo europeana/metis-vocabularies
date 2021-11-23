@@ -170,7 +170,8 @@
 
             <!-- Places -->
 
-            <!-- instance of: country (Q6256), historical country (Q3024240), City (Q515)
+            <!-- instance of: human settlement (Q486972), country (Q6256)
+                            , historical country (Q3024240), City (Q515)
                             , third-level administrative country subdivision (Q13221722)
                             , municipal district (Q2198484), amt (Q478847), castle (Q23413)
                             , monument (Q4989906), royal palace (Q53536964), château (Q751876)
@@ -178,7 +179,8 @@
                             , abbey (Q160742), excavation (Q959782)
                             , memorial (Q6642119), war memorial (Q575759)
                             , archaeological site (Q839954) -->
-            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q6256'
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q486972'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q6256'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q3024240'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q515'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q13221722'
@@ -244,7 +246,8 @@
                             , Musical Ensemble (Q2088357), brass ensemble (Q883323)
                             , quartet (Q1135557), octet (Q99252497)
                             , group (Q16887380), art group (Q4502119)
-                            , sibling group (Q16979650), girl group (Q641066)
+                            , sibling group (Q16979650), sibling duo (Q14073567)
+                            , girl group (Q641066)
                             , vocal group (Q120544), rock group (Q5741069), heavy metal band (Q56816954)
                             , family name (Q101352), musical family (Q78425721)
                             , family of artists (Q1292111), brand (Q431289)
@@ -263,6 +266,7 @@
                                      or @rdf:resource='http://www.wikidata.org/entity/Q16887380'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q4502119'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q16979650'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q14073567'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q641066'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q120544'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q5741069'
@@ -403,35 +407,34 @@
             <!-- descriptions -->
             <xsl:for-each select="schema:description">
                 <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
-                    <xsl:element name="skos:note">
-                        <xsl:copy-of select="@xml:lang"/>
-                        <xsl:value-of select="."/>
-                    </xsl:element>
+                    <xsl:call-template name="LangLiteral">
+                        <xsl:with-param name="prop" select="'skos:note'"/>
+                    </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
 
             <!-- dates -->
             <xsl:for-each select="wdt:P571">
-                <xsl:element name="rdaGr2:dateOfEstablishment">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+                <xsl:call-template name="Literal">
+                    <xsl:with-param name="prop" select="'rdaGr2:dateOfEstablishment'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P576">
-                <xsl:element name="rdaGr2:dateOfTermination">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+                <xsl:call-template name="Literal">
+                    <xsl:with-param name="prop" select="'rdaGr2:dateOfTermination'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- relationships -->
             <xsl:for-each select="wdt:P361 | wdt:P463">
-                <xsl:element name="dcterms:isPartOf">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P527">
-                <xsl:element name="dcterms:hasPart">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'dcterms:hasPart'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Co-referencing -->
@@ -467,10 +470,9 @@
             <!-- description -->
             <xsl:for-each select="schema:description">
                 <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
-                    <xsl:element name="skos:note">
-                        <xsl:copy-of select="@xml:lang"/>
-                        <xsl:value-of select="."/>
-                    </xsl:element>
+                    <xsl:call-template name="LangLiteral">
+                        <xsl:with-param name="prop" select="'skos:note'"/>
+                    </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
 
@@ -496,75 +498,73 @@
 
             <!-- places -->
             <xsl:for-each select="wdt:P19">
-                <xsl:element name="rdaGr2:placeOfBirth">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'rdaGr2:placeOfBirth'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P20">
-                <xsl:element name="rdaGr2:placeOfDeath">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'rdaGr2:placeOfDeath'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- dates -->
 
             <xsl:for-each select="wdt:P569">
-                <xsl:element name="rdaGr2:dateOfBirth">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+                <xsl:call-template name="Literal">
+                    <xsl:with-param name="prop" select="'rdaGr2:dateOfBirth'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P570">
-                <xsl:element name="rdaGr2:dateOfDeath">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+                <xsl:call-template name="Literal">
+                    <xsl:with-param name="prop" select="'rdaGr2:dateOfDeath'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- professions or occupations -->
 
             <xsl:for-each select="wdt:P39 | wdt:P97 | wdt:P101 | wdt:P106">
-                <xsl:element name="rdaGr2:professionOrOccupation">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'rdaGr2:professionOrOccupation'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- family relationships -->
 
             <xsl:for-each select="wdt:P7 | wdt:P9 | wdt:P22 | wdt:P25 | wdt:P26
                                 | wdt:P40 | wdt:P451 | wdt:P3373">
-                <xsl:element name="edm:isRelatedTo">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'edm:isRelatedTo'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- part relationships -->
             <xsl:for-each select="wdt:P361 | wdt:P463">
-                <xsl:element name="dcterms:isPartOf">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P527">
-                <xsl:element name="dcterms:hasPart">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'dcterms:hasPart'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- relationships with other agents -->
 
             <xsl:for-each select="wdt:P737 | wdt:P1327 | wdt:P1775 | wdt:P1780">
-                <xsl:element name="edm:isRelatedTo">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'edm:isRelatedTo'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- relationships with concepts -->
 
             <xsl:for-each select="wdt:P135 | wdt:P136 | wdt:P1066 | wdt:P607
                                 | wdt:P1303 | wdt:P641 | wdt:P2416 | wdt:P2650">
-                <xsl:if test="@rdf:resource">
-                    <xsl:element name="edm:hasMet">
-                        <xsl:copy-of select="@rdf:resource"/>
-                    </xsl:element>
-                </xsl:if>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'edm:hasMet'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Co-referencing -->
@@ -601,10 +601,9 @@
             <!-- descriptions -->
             <xsl:for-each select="schema:description">
                 <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
-                    <xsl:element name="skos:note">
-                        <xsl:copy-of select="@xml:lang"/>
-                        <xsl:value-of select="."/>
-                    </xsl:element>
+                    <xsl:call-template name="LangLiteral">
+                        <xsl:with-param name="prop" select="'skos:note'"/>
+                    </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
 
@@ -627,9 +626,9 @@
             </xsl:for-each>
 
             <xsl:for-each select="wdt:P2044">
-                <xsl:element name="wgs84_pos:alt">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+                <xsl:call-template name="Literal">
+                    <xsl:with-param name="prop" select="'wgs84_pos:alt'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Part relations -->
@@ -637,23 +636,23 @@
             <xsl:choose>
                 <xsl:when test="wdt:P361">
                     <xsl:for-each select="wdt:P361">
-                        <xsl:element name="dcterms:isPartOf">
-                            <xsl:copy-of select="@rdf:resource"/>
-                        </xsl:element>
+                        <xsl:call-template name="Reference">
+                            <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                        </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="wdt:P17">
                     <xsl:for-each select="wdt:P17">
-                        <xsl:element name="dcterms:isPartOf">
-                            <xsl:copy-of select="@rdf:resource"/>
-                        </xsl:element>
+                        <xsl:call-template name="Reference">
+                            <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                        </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="wdt:P30">
                     <xsl:for-each select="wdt:P30">
-                        <xsl:element name="dcterms:isPartOf">
-                            <xsl:copy-of select="@rdf:resource"/>
-                        </xsl:element>
+                        <xsl:call-template name="Reference">
+                            <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                        </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
             </xsl:choose>
@@ -707,14 +706,14 @@
             <!-- relations -->
 
             <xsl:for-each select="wdt:P361">
-                <xsl:element name="dcterms:isPartOf">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="wdt:P155">
-                <xsl:element name="edm:isNextInSequence">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'edm:isNextInSequence'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Co-referencing -->
@@ -752,17 +751,16 @@
 
             <xsl:for-each select="schema:description">
                 <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
-                    <xsl:element name="skos:note">
-                        <xsl:copy-of select="@xml:lang"/>
-                        <xsl:value-of select="."/>
-                    </xsl:element>
+                    <xsl:call-template name="LangLiteral">
+                        <xsl:with-param name="prop" select="'skos:note'"/>
+                    </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
 
             <xsl:for-each select="wdt:P31 | wdt:P279 | wdt:P2445">
-                <xsl:element name="skos:broader">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'skos:broader'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Relationships with other concepts -->
@@ -771,9 +769,9 @@
                                 | wdt:P156 | wdt:P361 | wdt:P527 | wdt:P737
                                 | wdt:P1535 | wdt:P1557 | wdt:P2283 | wdt:P2579
                                 | wdt:P2670 | wdt:P101 | wdt:P3095">
-                <xsl:element name="skos:related">
-                    <xsl:copy-of select="@rdf:resource"/>
-                </xsl:element>
+                <xsl:call-template name="Reference">
+                    <xsl:with-param name="prop" select="'skos:related'"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <!-- Co-referencing -->
@@ -800,7 +798,39 @@
 
     </xsl:template>
 
+
     <!--                           FUNCTIONS                                 -->
+
+    <xsl:template name="Literal">
+        <xsl:param name="prop"/>
+
+        <xsl:if test="text()[string-length(.) &gt; 0]">
+            <xsl:element name="{$prop}">
+                <xsl:value-of select="."/>
+            </xsl:element>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="LangLiteral">
+        <xsl:param name="prop"/>
+
+        <xsl:if test="text()[string-length(.) &gt; 0]">
+            <xsl:element name="{$prop}">
+                <xsl:copy-of select="@xml:lang"/>
+                <xsl:value-of select="."/>
+            </xsl:element>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="Reference">
+        <xsl:param name="prop"/>
+
+        <xsl:if test="@rdf:resource">
+            <xsl:element name="{$prop}">
+                <xsl:copy-of select="@rdf:resource"/>
+            </xsl:element>
+        </xsl:if>
+    </xsl:template>
 
     <xsl:template name="DBpedia">
         <xsl:param name="uri"/>
