@@ -103,6 +103,10 @@
     <xsl:variable name="statements"
       select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://wikiba.se/ontology#Statement']"/>
 
+
+
+    <!--+++++++++++++++++++++++++++++++ RULES +++++++++++++++++++++++++++++++-->
+
     <xsl:template match="/">
         <xsl:apply-templates select="rdf:RDF"/>
     </xsl:template>
@@ -129,10 +133,14 @@
                         </rdf:Description>
                     </xsl:when>
                     <xsl:otherwise>
+                        <!-- Redirection case -->
                         <xsl:variable name="newId" select="$props[name()='owl:sameAs']/@rdf:resource"/>
                         <rdf:Description>
                             <xsl:attribute name="rdf:about" select="$newId"/>
                             <xsl:copy-of select="rdf:Description[@rdf:about=$newId]/*"/>
+                            <xsl:element name="owl:sameAs">
+                                <xsl:attribute name="rdf:resource"><xsl:value-of select="$targetId"/></xsl:attribute>
+                            </xsl:element>
                         </rdf:Description>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -799,7 +807,7 @@
     </xsl:template>
 
 
-    <!--                           FUNCTIONS                                 -->
+    <!--+++++++++++++++++++++++++++ FUNCTIONS +++++++++++++++++++++++++++++++-->
 
     <xsl:template name="Literal">
         <xsl:param name="prop"/>
@@ -832,19 +840,8 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template name="DBpedia">
-        <xsl:param name="uri"/>
 
-        <xsl:for-each select="$articles[schema:about/@rdf:resource=$uri
-                                    and contains(@rdf:about,$wiki)]">
-            <xsl:element name="owl:sameAs">
-                <xsl:attribute name="rdf:resource">
-                    <xsl:value-of select="replace(@rdf:about,$wiki,$dbp)"/>
-                </xsl:attribute>
-            </xsl:element>
-        </xsl:for-each>
-
-    </xsl:template>
+    <!--+++++++++++++++++++++++++++++ LABELS ++++++++++++++++++++++++++++++++-->
 
     <xsl:template name="labels">
         <xsl:param name="alt"/>
@@ -887,6 +884,9 @@
         <xsl:sequence select="matches($string,'[\p{L}\p{N}]')"/>
     </xsl:function>
 
+
+    <!--++++++++++++++++++++++++ GEO COORDINATES ++++++++++++++++++++++++++++-->
+
     <xsl:function name="lib:geo2coord" as="xs:string">
         <xsl:param    name="value"/>
         <xsl:param    name="index"/>
@@ -906,6 +906,9 @@
         <xsl:value-of select="replace($value, '\s*Point[(]\s*([-+]?\d+([.]\d+)?)\s+([-+]?\d+([.]\d+)?)\s*[)]\s*', $replace)"/>
 
     </xsl:function>
+
+
+    <!--++++++++++++++++++++++++++ COREFERENCING ++++++++++++++++++++++++++++-->
 
     <xsl:template name="coref">
         <xsl:param name="current"/>
@@ -939,5 +942,19 @@
         </xsl:choose>
 
     </xsl:function>
+
+    <xsl:template name="DBpedia">
+        <xsl:param name="uri"/>
+
+        <xsl:for-each select="$articles[schema:about/@rdf:resource=$uri
+                                    and contains(@rdf:about,$wiki)]">
+            <xsl:element name="owl:sameAs">
+                <xsl:attribute name="rdf:resource">
+                    <xsl:value-of select="replace(@rdf:about,$wiki,$dbp)"/>
+                </xsl:attribute>
+            </xsl:element>
+        </xsl:for-each>
+
+    </xsl:template>
 
 </xsl:stylesheet>
