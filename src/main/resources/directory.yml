@@ -42,6 +42,10 @@
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
 
+# LCNAF - LC Name Authority File
+- metadata: vocabularies/concept/lcnaf.yml
+  mapping: vocabularies/concept/lcnaf.xsl
+
 # LCSH - Library of Congress
 - metadata: vocabularies/concept/lcsh.yml
   mapping: vocabularies/concept/lcsh.xsl
