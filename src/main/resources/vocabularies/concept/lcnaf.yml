@@ -1,0 +1,10 @@
+name: LC Name Authority File
+types:
+- CONCEPT
+paths:
+- http://id.loc.gov/authorities/names/
+suffix: .skos.rdf
+examples:
+- http://id.loc.gov/authorities/names/n80162724
+- http://id.loc.gov/authorities/names/n90641872
+- http://id.loc.gov/authorities/names/n85065367
