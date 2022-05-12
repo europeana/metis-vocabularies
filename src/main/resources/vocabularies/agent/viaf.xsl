@@ -4,7 +4,7 @@
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
   xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:rdagr2="http://rdvocab.info/ElementsGr2/"
-  xmlns:rdau="http://rdaregistry.info/Elements/u/" xmlns:dbo="http://dbpedia.org/ontology/">
+  xmlns:dbo="http://dbpedia.org/ontology/">
   <xsl:param name="targetId"></xsl:param>
   <xsl:output indent="yes" encoding="UTF-8"/>
 
@@ -105,14 +105,14 @@
             </rdagr2:dateOfDeath>
           </xsl:for-each>
 
-          <!-- Tag mapping: schema:gender -> rdau:P60531 -->
+          <!-- Tag mapping: schema:gender -> rdagr2:gender -->
           <xsl:for-each select="./schema:gender">
             <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-            <rdau:P60531>
+            <rdagr2:gender>
               <xsl:attribute name="rdf:resource">
                 <xsl:value-of select="@rdf:resource"/>
               </xsl:attribute>
-            </rdau:P60531>
+            </rdagr2:gender>
           </xsl:for-each>
 
           <!-- Tag mapping: schema:sameAs -> owl:sameAs -->
