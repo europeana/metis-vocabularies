@@ -105,16 +105,6 @@
             </rdagr2:dateOfDeath>
           </xsl:for-each>
 
-          <!-- Tag mapping: schema:gender -> rdagr2:gender -->
-          <xsl:for-each select="./schema:gender">
-            <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-            <rdagr2:gender>
-              <xsl:attribute name="rdf:resource">
-                <xsl:value-of select="@rdf:resource"/>
-              </xsl:attribute>
-            </rdagr2:gender>
-          </xsl:for-each>
-
           <!-- Tag mapping: schema:sameAs -> owl:sameAs -->
           <xsl:for-each select="./schema:sameAs">
             <owl:sameAs>
