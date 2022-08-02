@@ -1,4 +1,4 @@
-# AAT - Getty vocabularies
+# AAT - Getty Art and Architecture Thesaurus
 - metadata: vocabularies/concept/aat.yml
   mapping: vocabularies/concept/aat.xsl
 
@@ -30,7 +30,7 @@
 - metadata: vocabularies/place/geonames.yml
   mapping: vocabularies/place/geonames.xsl
 
-# GND Collections (Deutsche Nationalbibliothek)
+# Gemeinsame Normdatei (GND) Collections - Deutsche Nationalbibliothek
 - metadata: vocabularies/gnd/gnd.yml
   mapping: vocabularies/gnd/gnd.xsl
 
@@ -42,11 +42,11 @@
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
 
-# LCNAF - LC Name Authority File (Library of Congress)
+# LCNAF - Library of Congress Name Authority File
 - metadata: vocabularies/concept/lcnaf.yml
   mapping: vocabularies/concept/lcnaf.xsl
 
-# LCSH - Library of Congress
+# LCSH - Library of Congress Subject Headings
 - metadata: vocabularies/concept/lcsh.yml
   mapping: vocabularies/concept/lcsh.xsl
 
@@ -66,7 +66,7 @@
 - metadata: vocabularies/concept/rda.yml
   mapping: vocabularies/concept/rda.xsl
 
-# TGN - Getty vocabularies
+# TGN - Getty Thesaurus of Geographic Names
 - metadata: vocabularies/place/tgn.yml
   mapping: vocabularies/place/tgn.xsl
 
@@ -74,7 +74,7 @@
 - metadata: vocabularies/concept/udc.yml
   mapping: vocabularies/concept/udc.xsl
 
-# ULAN - Getty vocabularies
+# ULAN - Getty Union List of Artist Names
 - metadata: vocabularies/agent/ulan.yml
   mapping: vocabularies/agent/ulan.xsl
 
