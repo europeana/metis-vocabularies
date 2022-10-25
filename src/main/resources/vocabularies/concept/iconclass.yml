@@ -2,6 +2,9 @@ name: IconClass concepts
 types:
 - CONCEPT
 paths:
-- http://iconclass.org/
+- https://iconclass.org/
+suffix: .rdf
 examples:
-- http://iconclass.org/11%28%2B5%29
+- https://iconclass.org/11%28%2B5%29
+- https://iconclass.org/46D3
+- https://iconclass.org/25H11

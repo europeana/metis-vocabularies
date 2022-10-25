@@ -8,7 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>metis-vocabularies</name>
     <properties>
-        <metis.version>5-SNAPSHOT</metis.version>
+        <metis.version>8</metis.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <repositories>
