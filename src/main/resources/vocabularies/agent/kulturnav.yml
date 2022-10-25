@@ -1,0 +1,18 @@
+name: KulturNav (Norway)
+types:
+  - AGENT
+paths:
+  - http://kulturnav.org/
+suffix: .rdf
+examples:
+  - http://kulturnav.org/e2903551-cc56-46a3-9a8d-873b45f1f841
+  - http://kulturnav.org/cbfdca64-f0d0-49b1-a68e-dc53d1bed4db
+  - http://kulturnav.org/e4c1d165-4465-4e15-8f1a-6501ba6bb46d
+  - http://kulturnav.org/7ab0a929-31e8-4e00-9f06-672a5c7e67f9
+  - http://kulturnav.org/69330383-11d2-451c-91af-94ef84f0a138
+  - http://kulturnav.org/4f82eb04-642d-4eba-b3cd-12f5defe03ea
+  - http://kulturnav.org/bc456932-b7a4-4a7f-9f9d-60b7f772fa48
+counterExamples:
+  - http://kulturnav.org/05734b98-5bc6-41c5-b382-5607f67aa5a4
+  - http://kulturnav.org/1f29e52c-482c-4a3d-aca1-36eaaf80110f
+  - http://kulturnav.org/d587e462-ce2f-4787-b59d-e0600aff7f29

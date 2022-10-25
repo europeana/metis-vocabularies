@@ -42,6 +42,10 @@
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
 
+# KulturNav (Norway)
+- metadata: vocabularies/agent/kulturnav.yml
+  mapping: vocabularies/agent/kulturnav.xsl
+
 # LCNAF - Library of Congress Name Authority File
 - metadata: vocabularies/concept/lcnaf.yml
   mapping: vocabularies/concept/lcnaf.xsl
