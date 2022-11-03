@@ -4,35 +4,52 @@
   Document   : wikidata.xsl
   Author     : hmanguinhas
   Created on : October 13, 2019
-  Updated on : March 16, 2021
-  
+  Updated on : November 2, 2022
+
   https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
+
+DONE:  
+  + Remove Dewey Classification Mapping
+  + prevent circular references (e.g. http://data.europeana.eu/place/90)
+  + remove problematic characters (e.g. https://codepoints.net/U+1F3D0 )
+    https://europeana.atlassian.net/browse/MET-4597
+  + reviewed conditions for persons so that humans take precedence over all
+  + improved places with municipality type
+
+TODO:
+  - monitor circular references (especially via indirect links)
+  - monitor edm:begin and edm:end date formats
+  - further work is expected to categorise places and/or better cover countries
+    https://europeana.atlassian.net/browse/RD-122
+    https://europeana.atlassian.net/browse/RD-123
+  - 
+
 -->
 
 <xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:edm="http://www.europeana.eu/schemas/edm/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dcterms="http://purl.org/dc/terms/"
-  xmlns:foaf="http://xmlns.com/foaf/0.1/"
-  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-  xmlns:owl="http://www.w3.org/2002/07/owl#"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-  xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
-  xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:edm="http://www.europeana.eu/schemas/edm/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
+    xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
 
-  xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
-  xmlns:wdt="http://www.wikidata.org/prop/direct/"
-  xmlns:p="http://www.wikidata.org/prop/"
-  xmlns:ps="http://www.wikidata.org/prop/statement/"
-  xmlns:schema="http://schema.org/"
+    xmlns:wdt="http://www.wikidata.org/prop/direct/"
+    xmlns:p="http://www.wikidata.org/prop/" 
+    xmlns:ps="http://www.wikidata.org/prop/statement/"  
+    xmlns:schema="http://schema.org/"
 
-  xmlns:lib="http://example.org/lib"
+    xmlns:lib="http://example.org/lib"
 
-  exclude-result-prefixes="wdt schema lib xs fn">
+    exclude-result-prefixes="wdt schema lib xs fn">
 
     <xsl:output indent="yes" encoding="UTF-8"/>
 
@@ -44,12 +61,12 @@
     <xsl:variable name="dbp"       select="'http://dbpedia.org/resource/'"/>
 
     <!-- Portal languages (27) -->
-    <xsl:variable name="langs">en,pl,de,nl,fr,it,da,sv,el,fi,hu,cs,sl,et,pt,es,lt,lv,bg,ro,sk,hr,ga,mt,no,ca,ru</xsl:variable>
+    <xsl:variable name="langs">en,pl,de,nl,fr,it,da,sv,el,fi,hu,cs,sl,et,pt,es,lt,lv,bg,ro,sk,hr,ga,mt,no,ca,ru,eu</xsl:variable>
 
     <!-- Co-reference mapping table -->
     <xsl:variable name="map">
         <entry key="P214">http://viaf.org/viaf/$1</entry>
-        <entry key="P227">http://d-nb.info/gnd/$1</entry>
+        <entry key="P227">https://d-nb.info/gnd/$1</entry><!-- changed from HTTP to HTTPS -->
         <entry key="P244">http://id.loc.gov/authorities/names/$1</entry>
         <entry key="P245">http://vocab.getty.edu/ulan/$1</entry>
         <entry key="P268">http://data.bnf.fr/ark:/12148/cb$1</entry>
@@ -66,7 +83,6 @@
         <entry key="P1006">http://data.bibliotheken.nl/id/thes/p$1</entry>
         <entry key="P1014">http://vocab.getty.edu/aat/$1</entry>
         <entry key="P1015">https://livedata.bibsys.no/authority/$1</entry>
-        <entry key="P1036">http://dewey.info/class/$1/</entry>
         <entry key="P1256">http://iconclass.org/$1</entry>
         <entry key="P1260">http://kulturarvsdata.se/$1</entry>
         <entry key="P1422">http://ta.sandrart.net/-person-$1</entry>
@@ -97,11 +113,11 @@
         <entry key="P6293">http://www.yso.fi/onto/ysa/$1</entry>
     </xsl:variable>
 
-    <xsl:variable name="articles"
-      select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://schema.org/Article']"/>
+    <xsl:variable name="articles" 
+                  select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://schema.org/Article']"/>
 
-    <xsl:variable name="statements"
-      select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://wikiba.se/ontology#Statement']"/>
+    <xsl:variable name="statements" 
+                  select="/rdf:RDF/rdf:Description[rdf:type/@rdf:resource='http://wikiba.se/ontology#Statement']"/>
 
 
 
@@ -117,33 +133,33 @@
 
         <xsl:if test="$props">
             <xsl:variable name="entity">
-                <xsl:choose>
-                    <!--
-                    <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q17362920'">
-                    </xsl:when>
-                     -->
-                    <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q22808320'">
-                    </xsl:when>
-                    <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q4167410'">
-                    </xsl:when>
-                    <xsl:when test="$props[name()!='owl:sameAs']">
-                        <rdf:Description>
-                            <xsl:attribute name="rdf:about" select="$targetId"/>
-                            <xsl:copy-of select="$props"/>
-                        </rdf:Description>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <!-- Redirection case -->
-                        <xsl:variable name="newId" select="$props[name()='owl:sameAs']/@rdf:resource"/>
-                        <rdf:Description>
-                            <xsl:attribute name="rdf:about" select="$newId"/>
-                            <xsl:copy-of select="rdf:Description[@rdf:about=$newId]/*"/>
-                            <xsl:element name="owl:sameAs">
-                                <xsl:attribute name="rdf:resource"><xsl:value-of select="$targetId"/></xsl:attribute>
-                            </xsl:element>
-                        </rdf:Description>
-                    </xsl:otherwise>
-                </xsl:choose>
+              <xsl:choose>
+                <!-- 
+                <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q17362920'">
+                </xsl:when>
+                 -->
+                <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q22808320'">
+                </xsl:when>
+                <xsl:when test="$props[name()='wdt:P31']/@rdf:resource = 'http://www.wikidata.org/entity/Q4167410'">
+                </xsl:when>
+                <xsl:when test="$props[name()!='owl:sameAs']">
+                  <rdf:Description>
+                      <xsl:attribute name="rdf:about" select="$targetId"/>
+                      <xsl:copy-of select="$props"/>
+                  </rdf:Description>
+                </xsl:when>
+                <xsl:otherwise>
+                  <!-- Redirection case -->
+                  <xsl:variable name="newId" select="$props[name()='owl:sameAs']/@rdf:resource"/>
+                  <rdf:Description>
+                      <xsl:attribute name="rdf:about" select="$newId"/>
+                      <xsl:copy-of select="rdf:Description[@rdf:about=$newId]/*"/>                
+                      <xsl:element name="owl:sameAs">
+                        <xsl:attribute name="rdf:resource"><xsl:value-of select="$targetId"/></xsl:attribute>
+                      </xsl:element>
+                  </rdf:Description>
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:variable>
 
             <xsl:for-each select="$entity/rdf:Description">
@@ -162,13 +178,29 @@
 
         <xsl:choose>
 
-            <!-- To avoid mapping Wikidata Properties by default to Concepts -->
+        <!-- To avoid mapping Wikidata Properties by default to Concepts -->
 
             <xsl:when test="count(*[namespace-uri()!='http://www.wikidata.org/prop/'
                                     and name()!='rdf:type'])=0">
             </xsl:when>
 
-            <!-- Concepts (explicit conditions) -->
+
+        <!--
+                        NECESSARY AND SUFFICIENT CONDITIONS
+        (all conditions that take precedence and are sufficient to decide 
+        for a mapping class)
+        -->
+
+
+        <!-- Agents: Individuals (real) -->
+
+            <!-- instance of: Human (Q5) -->
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q5'
+                                     ]">
+                <xsl:call-template name="AgentIndividual"/>
+            </xsl:when>
+
+        <!-- Concepts -->
 
             <!-- instance of: music genre (Q188451), ancient civilisation (Q28171280) -->
             <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q188451'
@@ -176,7 +208,13 @@
                 <xsl:call-template name="Concept"/>
             </xsl:when>
 
-            <!-- Places -->
+
+        <!--
+                               SUFFICIENT CONDITIONS
+        (all secondary conditions that can be used to determine a mapping class)
+        -->
+
+        <!-- Places -->
 
             <!-- instance of: human settlement (Q486972), country (Q6256)
                             , historical country (Q3024240), City (Q515)
@@ -186,26 +224,46 @@
                             , fortress (Q57831), fortification (Q57821)
                             , abbey (Q160742), excavation (Q959782)
                             , memorial (Q6642119), war memorial (Q575759)
-                            , archaeological site (Q839954) -->
-            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q486972'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q6256'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q3024240'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q515'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q13221722'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q2198484'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q478847'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q23413'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q4989906'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q53536964'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q751876'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q57831'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q57821'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q160742'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q959782'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q6642119'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q575759'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q839954'
-                                     ]">
+                            , archaeological site (Q839954)
+                            , human-made geographic feature (Q811430)
+                             -->
+            <xsl:when test="$instanceOf[
+                  @rdf:resource='http://www.wikidata.org/entity/Q486972'
+               or @rdf:resource='http://www.wikidata.org/entity/Q6256'
+               or @rdf:resource='http://www.wikidata.org/entity/Q3024240'
+               or @rdf:resource='http://www.wikidata.org/entity/Q515'
+               or @rdf:resource='http://www.wikidata.org/entity/Q13221722'
+               or @rdf:resource='http://www.wikidata.org/entity/Q2198484'
+               or @rdf:resource='http://www.wikidata.org/entity/Q478847'
+               or @rdf:resource='http://www.wikidata.org/entity/Q23413'
+               or @rdf:resource='http://www.wikidata.org/entity/Q4989906'
+               or @rdf:resource='http://www.wikidata.org/entity/Q53536964'
+               or @rdf:resource='http://www.wikidata.org/entity/Q751876'
+               or @rdf:resource='http://www.wikidata.org/entity/Q57831'
+               or @rdf:resource='http://www.wikidata.org/entity/Q57821'
+               or @rdf:resource='http://www.wikidata.org/entity/Q160742'
+               or @rdf:resource='http://www.wikidata.org/entity/Q959782'
+               or @rdf:resource='http://www.wikidata.org/entity/Q6642119'
+               or @rdf:resource='http://www.wikidata.org/entity/Q575759'
+               or @rdf:resource='http://www.wikidata.org/entity/Q839954'
+               or @rdf:resource='http://www.wikidata.org/entity/Q811430'
+                ]">
+                <xsl:call-template name="Place"/>
+            </xsl:when>
+
+            <!-- instance of municipality: 
+                 municipality of Greece (Q1349648)
+                 municipality of Poland (Q15334)
+                 municipality of Spain (Q2074737)
+                 municipality of Switzerland (Q70208)
+                 municipality of Portugal (Q13217644) -->
+            <xsl:when test="$instanceOf[
+                  @rdf:resource='http://www.wikidata.org/entity/Q1349648'
+               or @rdf:resource='http://www.wikidata.org/entity/Q15334'
+               or @rdf:resource='http://www.wikidata.org/entity/Q2074737'
+               or @rdf:resource='http://www.wikidata.org/entity/Q70208'
+               or @rdf:resource='http://www.wikidata.org/entity/Q13217644'
+                ]">
                 <xsl:call-template name="Place"/>
             </xsl:when>
 
@@ -215,20 +273,20 @@
                 <xsl:call-template name="Place"/>
             </xsl:when>
 
-            <!-- Agents: Individuals (real and fictional) -->
+        <!-- Agents: Individuals (fictional) -->
 
-            <!-- instance of: Human (Q5), Fictional Human (Q15632617)
+            <!-- instance of: Fictional Human (Q15632617)
                             , Fictional Character (Q95074), Comics character (Q1114461)
                             , Pen name (Q127843), Heteronym (Q1136342)
                             , literary character (Q3658341) -->
-            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q5'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q15632617'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q95074'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q1114461'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q127843'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q1136342'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q3658341'
-                                     ]">
+            <xsl:when test="$instanceOf[
+                  @rdf:resource='http://www.wikidata.org/entity/Q15632617'
+               or @rdf:resource='http://www.wikidata.org/entity/Q95074'
+               or @rdf:resource='http://www.wikidata.org/entity/Q1114461'
+               or @rdf:resource='http://www.wikidata.org/entity/Q127843'
+               or @rdf:resource='http://www.wikidata.org/entity/Q1136342'
+               or @rdf:resource='http://www.wikidata.org/entity/Q3658341'
+                ]">
                 <xsl:call-template name="AgentIndividual"/>
             </xsl:when>
 
@@ -238,13 +296,12 @@
             <xsl:when test="wdt:P463">
                 <xsl:call-template name="AgentIndividual"/>
             </xsl:when>
+            
 
+        <!-- Agents: Organisations/Groups -->
 
-            <!-- Agents: Organisations/Groups -->
-
-            <!-- containing property: P159 (headquarters location)
-                                    , P749 (parent organisation), P1128 (employees) -->
-            <xsl:when test="wdt:P159 | wdt:P749 | wdt:P1128">
+            <!-- containing property: P749 (parent organisation), P1128 (employees) -->
+            <xsl:when test="wdt:P749 | wdt:P1128">
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
 
@@ -255,7 +312,7 @@
                             , quartet (Q1135557), octet (Q99252497)
                             , group (Q16887380), art group (Q4502119)
                             , sibling group (Q16979650), sibling duo (Q14073567)
-                            , girl group (Q641066)
+                            , girl group (Q641066)                            
                             , vocal group (Q120544), rock group (Q5741069), heavy metal band (Q56816954)
                             , family name (Q101352), musical family (Q78425721)
                             , family of artists (Q1292111), brand (Q431289)
@@ -282,7 +339,7 @@
                                      or @rdf:resource='http://www.wikidata.org/entity/Q101352'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q78425721'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q431289'
-                                     or @rdf:resource='http://www.wikidata.org/entity/Q1292111'
+                                     or @rdf:resource='http://www.wikidata.org/entity/Q1292111'                                     
                                      or @rdf:resource='http://www.wikidata.org/entity/Q207338'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q8436'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q13417114'
@@ -290,7 +347,7 @@
                 <xsl:call-template name="AgentOrganization"/>
             </xsl:when>
 
-            <!-- Agents: Organisations -->
+        <!-- Agents: Organisations -->
 
             <!-- instance of: art gallery (Q1007870), art museum (Q207694), museum (Q33506)
                             , library (Q7075), academic library (Q856234), archive (Q166118)
@@ -333,7 +390,7 @@
             <!-- Agents: conditions applicable to both individuals and groups -->
 
             <!--  field of work (P101) and genre (P136) is applicable for agents and topics -->
-            <!-- containing property: occupation (P106),
+            <!-- containing property: occupation (P106), 
                                     , work period (P2031)
                                      -->
             <xsl:when test="wdt:P106 | wdt:P2031">
@@ -351,10 +408,10 @@
             </xsl:when>
 
 
-            <!-- TimeSpan -->
+        <!-- TimeSpan -->
 
             <!-- instance of: century, millennium, archaeological period, time interval, era -->
-            <!--
+            <!-- 
             <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q578'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q36507'
                                      or @rdf:resource='http://www.wikidata.org/entity/Q15401633'
@@ -367,15 +424,15 @@
             </xsl:when>
 
             <!-- instance of: historical period BUT WITH EXCEPTIONS -->
-            <!--
-            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q11514315'] and not
+            <!-- 
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q11514315'] and not 
                             ($instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q968159'])">
                 <xsl:call-template name="TimeSpan"/>
             </xsl:when>
              -->
 
 
-            <!-- Places (less strong conditions) -->
+        <!-- Places (less strong conditions) -->
 
             <!-- containing property: P1566 (GeoNames ID)
                                     , P625 (coordinate location) -->
@@ -384,12 +441,12 @@
             </xsl:when>
 
             <!-- instance of: building (Q7736711) -->
-            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q7736711'
+            <xsl:when test="$instanceOf[@rdf:resource='http://www.wikidata.org/entity/Q7736711'                                     
                                      ]">
                 <xsl:call-template name="Place"/>
             </xsl:when>
 
-            <!-- Concepts -->
+        <!-- Concepts -->
 
             <!-- everything else is mapped to concept -->
             <xsl:otherwise>
@@ -478,32 +535,32 @@
             <!-- description -->
             <xsl:for-each select="schema:description">
                 <xsl:if test="lib:isAcceptableLang(@xml:lang) and lib:isAcceptableLabel(.)">
-                    <xsl:call-template name="LangLiteral">
-                        <xsl:with-param name="prop" select="'skos:note'"/>
-                    </xsl:call-template>
+	                <xsl:call-template name="LangLiteral">
+	                    <xsl:with-param name="prop" select="'skos:note'"/>
+	                </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
 
             <!-- gender -->
-            <!--
-                        <xsl:for-each select="wdt:P21">
-                            <xsl:choose>
-                                <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q6581097'">
-                                    <xsl:element name="rdaGr2:gender" xml:lang="en">Male</xsl:element>
-                                </xsl:when>
-                                <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q6581072'">
-                                    <xsl:element name="rdaGr2:gender" xml:lang="en">Female</xsl:element>
-                                </xsl:when>
-                                <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q1052281'">
-                                    <xsl:element name="rdaGr2:gender" xml:lang="en">Transgender woman</xsl:element>
-                                </xsl:when>
-                                <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q1097630'">
-                                    <xsl:element name="rdaGr2:gender" xml:lang="en">Intersex</xsl:element>
-                                </xsl:when>
-                            </xsl:choose>
-                        </xsl:for-each>
-             -->
-
+<!-- 
+            <xsl:for-each select="wdt:P21">
+                <xsl:choose>
+                    <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q6581097'">
+                        <xsl:element name="rdaGr2:gender" xml:lang="en">Male</xsl:element>
+                    </xsl:when>
+                    <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q6581072'">
+                        <xsl:element name="rdaGr2:gender" xml:lang="en">Female</xsl:element>
+                    </xsl:when>
+                    <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q1052281'">
+                        <xsl:element name="rdaGr2:gender" xml:lang="en">Transgender woman</xsl:element>
+                    </xsl:when>
+                    <xsl:when test="@rdf:resource='http://www.wikidata.org/entity/Q1097630'">
+                        <xsl:element name="rdaGr2:gender" xml:lang="en">Intersex</xsl:element>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:for-each>
+ -->
+ 
             <!-- places -->
             <xsl:for-each select="wdt:P19">
                 <xsl:call-template name="Reference">
@@ -583,7 +640,7 @@
                         <xsl:copy-of select="@rdf:resource"/>
                     </xsl:element>
                 </xsl:for-each>
-
+    
                 <xsl:call-template name="coref">
                     <xsl:with-param name="current" select="."/>
                     <xsl:with-param name="target" select="'owl:sameAs'"/>
@@ -644,9 +701,9 @@
             <xsl:choose>
                 <xsl:when test="wdt:P361">
                     <xsl:for-each select="wdt:P361">
-                        <xsl:call-template name="Reference">
-                            <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
-                        </xsl:call-template>
+		                <xsl:call-template name="Reference">
+		                    <xsl:with-param name="prop" select="'dcterms:isPartOf'"/>
+		                </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="wdt:P17">
@@ -673,7 +730,7 @@
                         <xsl:copy-of select="@rdf:resource"/>
                     </xsl:element>
                 </xsl:for-each>
-
+    
                 <xsl:call-template name="coref">
                     <xsl:with-param name="current" select="."/>
                     <xsl:with-param name="target" select="'owl:sameAs'"/>
@@ -732,7 +789,7 @@
                         <xsl:copy-of select="@rdf:resource"/>
                     </xsl:element>
                 </xsl:for-each>
-
+    
                 <xsl:call-template name="coref">
                     <xsl:with-param name="current" select="."/>
                     <xsl:with-param name="target" select="'owl:sameAs'"/>
@@ -754,7 +811,9 @@
 
             <!-- labels -->
             <xsl:call-template name="labels">
+                <!-- 
                 <xsl:with-param name="alt" select="skos:altLabel"/>
+                 -->
             </xsl:call-template>
 
             <xsl:for-each select="schema:description">
@@ -771,7 +830,7 @@
                 </xsl:call-template>
             </xsl:for-each>
 
-            <!-- Relationships with other concepts -->
+        <!-- Relationships with other concepts -->
 
             <xsl:for-each select="wdt:PP135 | wdt:P136 | wdt:P144 | wdt:P155
                                 | wdt:P156 | wdt:P361 | wdt:P527 | wdt:P737
@@ -782,7 +841,7 @@
                 </xsl:call-template>
             </xsl:for-each>
 
-            <!-- Co-referencing -->
+        <!-- Co-referencing -->
 
             <xsl:if test="$coref">
                 <xsl:for-each select="owl:sameAs | wdt:P1709 | wdt:P2888">
@@ -790,8 +849,8 @@
                         <xsl:copy-of select="@rdf:resource"/>
                     </xsl:element>
                 </xsl:for-each>
-
-
+    
+    
                 <xsl:call-template name="coref">
                     <xsl:with-param name="current" select="."/>
                     <xsl:with-param name="target" select="'skos:exactMatch'"/>
@@ -808,7 +867,7 @@
 
 
     <!--+++++++++++++++++++++++++++ FUNCTIONS +++++++++++++++++++++++++++++++-->
-
+ 
     <xsl:template name="Literal">
         <xsl:param name="prop"/>
 
@@ -825,7 +884,7 @@
         <xsl:if test="text()[string-length(.) &gt; 0]">
             <xsl:element name="{$prop}">
                 <xsl:copy-of select="@xml:lang"/>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="lib:cleanText(.)"/>
             </xsl:element>
         </xsl:if>
     </xsl:template>
@@ -833,10 +892,13 @@
     <xsl:template name="Reference">
         <xsl:param name="prop"/>
 
-        <xsl:if test="@rdf:resource">
-            <xsl:element name="{$prop}">
-                <xsl:copy-of select="@rdf:resource"/>
-            </xsl:element>
+        
+        <xsl:if test="$prop!=$targetId">
+            <xsl:if test="@rdf:resource">
+                <xsl:element name="{$prop}">
+                    <xsl:copy-of select="@rdf:resource"/>
+                </xsl:element>
+            </xsl:if>
         </xsl:if>
     </xsl:template>
 
@@ -844,28 +906,28 @@
     <!--+++++++++++++++++++++++++++++ LABELS ++++++++++++++++++++++++++++++++-->
 
     <xsl:template name="labels">
-        <xsl:param name="alt"/>
+        <xsl:param name="alt" select="()"/>
 
         <xsl:variable name="labels"
-          select="rdfs:label[lib:isAcceptableLang(@xml:lang)
+                      select="rdfs:label[lib:isAcceptableLang(@xml:lang)
                                      and lib:isAcceptableLabel(text())]"/>
 
         <xsl:for-each select="$labels">
             <xsl:element name="skos:prefLabel">
                 <xsl:copy-of select="@xml:lang"/>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="lib:cleanText(.)"/>
             </xsl:element>
         </xsl:for-each>
 
         <xsl:for-each select="$alt">
             <xsl:variable name="literal" select="text()"/>
             <xsl:variable name="lang"    select="@xml:lang"/>
-            <xsl:if test="lib:isAcceptableLang($lang)
+            <xsl:if test="lib:isAcceptableLang($lang) 
                    and lib:isAcceptableLabel($literal)
                    and not($labels[text()=$literal and @xml:lang=$lang])">
                 <xsl:element name="skos:altLabel">
                     <xsl:copy-of select="@xml:lang"/>
-                    <xsl:value-of select="$literal" />
+                    <xsl:value-of select="lib:cleanText($literal)" />
                 </xsl:element>
             </xsl:if>
         </xsl:for-each>
@@ -884,10 +946,16 @@
         <xsl:sequence select="matches($string,'[\p{L}\p{N}]')"/>
     </xsl:function>
 
+    <xsl:function name="lib:cleanText" as="xs:string">
+        <xsl:param name="string"/>
+
+        <xsl:sequence select="fn:replace($string,'[&#x1F300;-&#x1F5FF;]','')"/>
+    </xsl:function>
+
 
     <!--++++++++++++++++++++++++ GEO COORDINATES ++++++++++++++++++++++++++++-->
 
-    <xsl:function name="lib:geo2coord" as="xs:string">
+     <xsl:function name="lib:geo2coord" as="xs:string">
         <xsl:param    name="value"/>
         <xsl:param    name="index"/>
 
@@ -925,8 +993,8 @@
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
-
-    <xsl:function name="lib:mapLD" as="xs:string">
+ 
+     <xsl:function name="lib:mapLD" as="xs:string">
         <xsl:param    name="pattern"/>
         <xsl:param    name="value"/>
 
@@ -934,14 +1002,14 @@
 
         <xsl:choose>
             <xsl:when test="starts-with($value,$base)">
-                <xsl:value-of select="$value"/>
+               <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="fn:replace($pattern,'[$]1',$value)"/>
+               <xsl:value-of select="fn:replace($pattern,'[$]1',$value)"/>
             </xsl:otherwise>
         </xsl:choose>
 
-    </xsl:function>
+     </xsl:function>
 
     <xsl:template name="DBpedia">
         <xsl:param name="uri"/>
