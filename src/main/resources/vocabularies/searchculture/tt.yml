@@ -1,0 +1,9 @@
+name: SearchCulture - Thematic Tags
+types:
+  - CONCEPT
+paths:
+  - http://semantics.gr/authorities/thematic_tags/
+examples:
+  - http://semantics.gr/authorities/thematic_tags/994210004
+  - http://semantics.gr/authorities/thematic_tags/156448834
+  - http://semantics.gr/authorities/thematic_tags/994149435

@@ -1,0 +1,9 @@
+name: SearchCulture - Figures in Greek History and Culture
+types:
+  - AGENT
+paths:
+  - http://semantics.gr/authorities/searchculture-persons/
+examples:
+  - http://semantics.gr/authorities/searchculture-persons/-146178089
+  - http://semantics.gr/authorities/searchculture-persons/840068413
+  - http://semantics.gr/authorities/searchculture-persons/2113546216

@@ -1,0 +1,9 @@
+name: SearchCulture - Greek Historical Periods
+types:
+  - TIMESTAMP
+paths:
+  - http://semantics.gr/authorities/historical-periods/
+examples:
+  - http://semantics.gr/authorities/historical-periods/ellhnistikh-periodos
+  - http://semantics.gr/authorities/historical-periods/neoterh-ellada
+  - http://semantics.gr/authorities/historical-periods/prwimh-epoxh-toy-xalkoy
