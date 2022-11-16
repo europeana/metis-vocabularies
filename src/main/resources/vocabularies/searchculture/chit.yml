@@ -1,0 +1,10 @@
+name: SearchCulture - Cultural Heritage Item Types
+types:
+  - CONCEPT
+paths:
+  - http://semantics.gr/authorities/ekt-item-types/
+examples:
+  - http://semantics.gr/authorities/ekt-item-types/Play
+  - http://semantics.gr/authorities/ekt-item-types/synola-dedomenwn
+  - http://semantics.gr/authorities/ekt-item-types/962194336
+  - http://semantics.gr/authorities/ekt-item-types/xartografiko-yliko

@@ -70,6 +70,30 @@
 - metadata: vocabularies/concept/rda.yml
   mapping: vocabularies/concept/rda.xsl
 
+# SearchCulture - Cultural Heritage Item Types
+- metadata: vocabularies/searchculture/chit.yml
+  mapping: vocabularies/searchculture/chit.xsl
+
+# SearchCulture - Thematic Tags
+- metadata: vocabularies/searchculture/tt.yml
+  mapping: vocabularies/searchculture/tt.xsl
+
+# SearchCulture - UNESCO Thesaurus
+- metadata: vocabularies/searchculture/unesco_t.yml
+  mapping: vocabularies/searchculture/unesco_t.xsl
+
+# SearchCulture - Greek Historical Periods
+- metadata: vocabularies/searchculture/ghp.yml
+  mapping: vocabularies/searchculture/ghp.xsl
+
+# SearchCulture - Figures in Greek History and Culture
+- metadata: vocabularies/searchculture/fghc.yml
+  mapping: vocabularies/searchculture/fghc.xsl
+
+# SearchCulture - Folklore Item Types
+- metadata: vocabularies/searchculture/fit.yml
+  mapping: vocabularies/searchculture/fit.xsl
+
 # TGN - Getty Thesaurus of Geographic Names
 - metadata: vocabularies/place/tgn.yml
   mapping: vocabularies/place/tgn.xsl

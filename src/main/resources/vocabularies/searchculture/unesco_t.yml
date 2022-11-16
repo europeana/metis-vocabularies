@@ -1,0 +1,9 @@
+name: SearchCulture - UNESCO Thesaurus
+types:
+  - CONCEPT
+paths:
+  - http://semantics.gr/authorities/ekt-unesco/
+examples:
+  - http://semantics.gr/authorities/ekt-unesco/199512961
+  - http://semantics.gr/authorities/ekt-unesco/99593784
+  - http://semantics.gr/authorities/ekt-unesco/712232380

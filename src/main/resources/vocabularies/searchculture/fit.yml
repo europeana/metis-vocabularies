@@ -1,0 +1,9 @@
+name: SearchCulture - Folklore Item Types
+types:
+  - CONCEPT
+paths:
+  - http://semantics.gr/authorities/craft-item-types/
+examples:
+  - http://semantics.gr/authorities/craft-item-types/521659808
+  - http://semantics.gr/authorities/craft-item-types/796250560
+  - http://semantics.gr/authorities/craft-item-types/521659808
