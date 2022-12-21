@@ -4,9 +4,11 @@
   Document   : wikidata.xsl
   Author     : hmanguinhas
   Created on : October 13, 2019
-  Updated on : November 2, 2022
+  Updated on : December 12, 2022
+  Version    : v1.6
 
-  https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
+Location: 
+https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
 
 DONE:  
   + Remove Dewey Classification Mapping
@@ -15,6 +17,7 @@ DONE:
     https://europeana.atlassian.net/browse/MET-4597
   + reviewed conditions for persons so that humans take precedence over all
   + improved places with municipality type
+  + fixed IconClass URIs: https://europeana.atlassian.net/browse/MET-5006
 
 TODO:
   - monitor circular references (especially via indirect links)
@@ -22,8 +25,6 @@ TODO:
   - further work is expected to categorise places and/or better cover countries
     https://europeana.atlassian.net/browse/RD-122
     https://europeana.atlassian.net/browse/RD-123
-  - 
-
 -->
 
 <xsl:stylesheet version="2.0"
@@ -83,7 +84,7 @@ TODO:
         <entry key="P1006">http://data.bibliotheken.nl/id/thes/p$1</entry>
         <entry key="P1014">http://vocab.getty.edu/aat/$1</entry>
         <entry key="P1015">https://livedata.bibsys.no/authority/$1</entry>
-        <entry key="P1256">http://iconclass.org/$1</entry>
+        <entry key="P1256" escape="true">http://iconclass.org/$1</entry>
         <entry key="P1260">http://kulturarvsdata.se/$1</entry>
         <entry key="P1422">http://ta.sandrart.net/-person-$1</entry>
         <entry key="P1566">https://sws.geonames.org/$1/</entry>
@@ -981,35 +982,40 @@ TODO:
     <xsl:template name="coref">
         <xsl:param name="current"/>
         <xsl:param name="target"/>
+
         <xsl:for-each select="$map/entry">
+            <xsl:variable name="mapping"  select="."/>
             <xsl:variable name="property" select="string(@key)"/>
-            <xsl:variable name="pattern"  select="string(text())"/>
             <xsl:for-each select="$current/*[local-name()=$property and namespace-uri()=$namespace]">
                 <xsl:element name="{$target}">
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="lib:mapLD($pattern,string(text()))"/>
+                        <xsl:value-of select="lib:mapLD($mapping,string(text()))"/>
                     </xsl:attribute>
                 </xsl:element>
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
- 
+
      <xsl:function name="lib:mapLD" as="xs:string">
-        <xsl:param    name="pattern"/>
+        <xsl:param    name="mapping"/>
         <xsl:param    name="value"/>
 
-        <xsl:variable name="base"  select="substring-before($pattern, '$1')"/>
+        <xsl:variable name="pattern" select="string($mapping/text())"/>
+        <xsl:variable name="base"    select="substring-before($pattern,'$1')"/>
 
         <xsl:choose>
             <xsl:when test="starts-with($value,$base)">
                <xsl:value-of select="$value"/>
+            </xsl:when>
+            <xsl:when test="$mapping/@escape">
+               <xsl:value-of select="fn:replace($pattern,'[$]1',encode-for-uri($value))"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="fn:replace($pattern,'[$]1',$value)"/>
             </xsl:otherwise>
         </xsl:choose>
 
-     </xsl:function>
+    </xsl:function>
 
     <xsl:template name="DBpedia">
         <xsl:param name="uri"/>
