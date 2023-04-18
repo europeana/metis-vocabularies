@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" version="1.0" xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#">
+<!--
+  Document   : FolkloreTypes2EDM.xsl
+  Author     : Masa
+  Created on : September 29, 2022
+  Updated on : April 13, 2023
+  Version    : v1.1
+changes:
+* comment out skos:narrower
+* add skos:closeMatch
+-->
+
+<xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#">
+
   <xsl:param name="targetId"/>
   <xsl:output indent="yes" encoding="UTF-8"/>
 
@@ -19,11 +35,15 @@
           <!-- Tag mapping: skos:broader -> skos:broader -->
           <xsl:apply-templates select="./skos:broader" mode="copy_resource" />
           <!-- Tag mapping: skos:narrower -> skos:narrower -->
+          <!--
           <xsl:apply-templates select="./skos:narrower" mode="copy_resource" />
+          -->
           <!-- Tag mapping: skos:relatedMatch -> skos:relatedMatch -->
           <xsl:apply-templates select="./skos:relatedMatch" mode="copy_resource" />
           <!-- Tag mapping: skos:exactMatch -> skos:exactMatch -->
           <xsl:apply-templates select="./skos:exactMatch" mode="copy_resource" />
+          <!-- Tag mapping: skos:closeMatch -> skos:closeMatch -->
+          <xsl:apply-templates select="./skos:closeMatch" mode="copy_resource" />
         </skos:Concept>
       </xsl:if>
     </xsl:for-each>
