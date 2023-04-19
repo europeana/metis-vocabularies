@@ -169,18 +169,6 @@
                                 </xsl:for-each>
                             </skos:altLabel>
                         </xsl:for-each>
-                        <!-- Tag mapping: gndo:gender -> rdagr2:gender -->
-                        <xsl:for-each select="./gndo:gender">
-                            <rdagr2:gender>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </rdagr2:gender>
-                        </xsl:for-each>
                         <!-- Tag mapping: gndo:dateOfDeath -> rdagr2:dateOfDeath -->
                         <xsl:for-each select="./gndo:dateOfDeath">
                             <rdagr2:dateOfDeath>
