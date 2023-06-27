@@ -4,8 +4,8 @@
   Document   : wikidata.xsl
   Author     : hmanguinhas
   Created on : October 13, 2019
-  Updated on : December 12, 2022
-  Version    : v1.6
+  Updated on : June 27, 2023
+  Version    : v1.7
 
 Location: 
 https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
@@ -18,6 +18,8 @@ DONE:
   + reviewed conditions for persons so that humans take precedence over all
   + improved places with municipality type
   + fixed IconClass URIs: https://europeana.atlassian.net/browse/MET-5006
+  + fixed DBpedia mapping for concepts
+  + improved mapping for IconClass and UNESCO to use the wdtn (normalised) property
 
 TODO:
   - monitor circular references (especially via indirect links)
@@ -57,9 +59,12 @@ TODO:
     <xsl:param name="targetId"/>
     <xsl:param name="coref" select="true()"/>
 
-    <xsl:variable name="namespace" select="'http://www.wikidata.org/prop/direct/'"/>
-    <xsl:variable name="wiki"      select="'https://en.wikipedia.org/wiki/'"/>
-    <xsl:variable name="dbp"       select="'http://dbpedia.org/resource/'"/>
+    <xsl:variable name="wdt"  select="'http://www.wikidata.org/prop/direct/'"/>
+    <xsl:variable name="wdtn" select="'http://www.wikidata.org/prop/direct-normalized/'"/>
+    
+    
+    <xsl:variable name="wiki" select="'https://en.wikipedia.org/wiki/'"/>
+    <xsl:variable name="dbp"  select="'http://dbpedia.org/resource/'"/>
 
     <!-- Portal languages (27) -->
     <xsl:variable name="langs">en,pl,de,nl,fr,it,da,sv,el,fi,hu,cs,sl,et,pt,es,lt,lv,bg,ro,sk,hr,ga,mt,no,ca,ru,eu</xsl:variable>
@@ -84,7 +89,7 @@ TODO:
         <entry key="P1006">http://data.bibliotheken.nl/id/thes/p$1</entry>
         <entry key="P1014">http://vocab.getty.edu/aat/$1</entry>
         <entry key="P1015">https://livedata.bibsys.no/authority/$1</entry>
-        <entry key="P1256" escape="true">http://iconclass.org/$1</entry>
+        <entry key="P1256"/>
         <entry key="P1260">http://kulturarvsdata.se/$1</entry>
         <entry key="P1422">http://ta.sandrart.net/-person-$1</entry>
         <entry key="P1566">https://sws.geonames.org/$1/</entry>
@@ -103,7 +108,7 @@ TODO:
         <entry key="P3348">http://nlg.okfn.gr/resource/authority/record$1</entry>
         <entry key="P3832">http://thesaurus.europeanafashion.eu/thesaurus/$1</entry>
         <entry key="P3911">http://zbw.eu/stw/descriptor/$1</entry>
-        <entry key="P3916">http://vocabularies.unesco.org/thesaurus/$1</entry>
+        <entry key="P3916"/>
         <entry key="P4104">http://data.carnegiehall.org/names/$1</entry>
         <entry key="P4307">https://id.erfgoed.net/thesauri/erfgoedtypes/$1</entry>
         <entry key="P4953">http://id.loc.gov/authorities/genreForms/$1</entry>
@@ -859,7 +864,8 @@ TODO:
             </xsl:if>
 
             <xsl:call-template name="DBpedia">
-                <xsl:with-param name="uri" select="@rdf:about"/>
+                <xsl:with-param name="uri"    select="@rdf:about"/>
+                <xsl:with-param name="target" select="'skos:exactMatch'"/>
             </xsl:call-template>
 
         </skos:Concept>
@@ -986,14 +992,29 @@ TODO:
         <xsl:for-each select="$map/entry">
             <xsl:variable name="mapping"  select="."/>
             <xsl:variable name="property" select="string(@key)"/>
-            <xsl:for-each select="$current/*[local-name()=$property and namespace-uri()=$namespace]">
-                <xsl:element name="{$target}">
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="lib:mapLD($mapping,string(text()))"/>
-                    </xsl:attribute>
-                </xsl:element>
-            </xsl:for-each>
+
+            <xsl:choose>
+                <xsl:when test="text()">
+                    <xsl:for-each select="$current/*[local-name()=$property and namespace-uri()=$wdt]">
+                        <xsl:element name="{$target}">
+                            <xsl:attribute name="rdf:resource">
+                                <xsl:value-of select="lib:mapLD($mapping,string(text()))"/>
+                            </xsl:attribute>
+                       </xsl:element>
+                    </xsl:for-each>
+               </xsl:when>
+               <xsl:otherwise>
+                    <xsl:for-each select="$current/*[local-name()=$property and namespace-uri()=$wdtn]">
+                        <xsl:element name="{$target}">
+                            <xsl:attribute name="rdf:resource">
+                                <xsl:value-of select="@rdf:resource"/>
+                            </xsl:attribute>
+                        </xsl:element>
+                    </xsl:for-each>
+               </xsl:otherwise>
+           </xsl:choose>
         </xsl:for-each>
+
     </xsl:template>
 
      <xsl:function name="lib:mapLD" as="xs:string">
@@ -1019,10 +1040,11 @@ TODO:
 
     <xsl:template name="DBpedia">
         <xsl:param name="uri"/>
+        <xsl:param name="target" select="'owl:sameAs'"/>
 
         <xsl:for-each select="$articles[schema:about/@rdf:resource=$uri
                                     and contains(@rdf:about,$wiki)]">
-            <xsl:element name="owl:sameAs">
+            <xsl:element name="{$target}">
                 <xsl:attribute name="rdf:resource">
                     <xsl:value-of select="replace(@rdf:about,$wiki,$dbp)"/>
                 </xsl:attribute>
