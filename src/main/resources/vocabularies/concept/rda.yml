@@ -1,7 +1,0 @@
-name: Resource Description and Access (RDA) Carrier Type
-types:
-- CONCEPT
-paths:
-- http://rdaregistry.info/termList/RDACarrierType
-examples:
-- http://rdaregistry.info/termList/RDACarrierType/1021

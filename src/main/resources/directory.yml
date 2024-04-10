@@ -66,10 +66,6 @@
 - metadata: vocabularies/concept/partage_plus.yml
   mapping: vocabularies/concept/partage_plus.xsl
 
-# RDA - Resource Description and Access
-- metadata: vocabularies/concept/rda.yml
-  mapping: vocabularies/concept/rda.xsl
-
 # SearchCulture - Cultural Heritage Item Types
 - metadata: vocabularies/searchculture/chit.yml
   mapping: vocabularies/searchculture/chit.xsl
