@@ -1,0 +1,7 @@
+name: Objektbezeichnungsdatei (OBG)
+types:
+  - CONCEPT
+paths:
+  - http://obg.vocnet.org/
+examples:
+  - http://obg.vocnet.org/bh000082
