@@ -62,6 +62,10 @@
 - metadata: vocabularies/concept/mimo.yml
   mapping: vocabularies/concept/mimo.xsl
 
+# Objektbezeichnungsdatei (OBG)
+- metadata: vocabularies/concept/obg.yml
+  mapping: vocabularies/concept/obg.xsl
+
 # Partage Plus
 - metadata: vocabularies/concept/partage_plus.yml
   mapping: vocabularies/concept/partage_plus.xsl
