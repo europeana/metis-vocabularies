@@ -2,6 +2,10 @@
 - metadata: vocabularies/concept/aat.yml
   mapping: vocabularies/concept/aat.xsl
 
+# DeBias vocabulary
+- metadata: vocabularies/concept/debias.yml
+  mapping: vocabularies/concept/debias.xsl
+
 # Dismarc Format - Discover Music Archives (Europeana)
 - metadata: vocabularies/concept/dismarc_format.yml
   mapping: vocabularies/concept/dismarc_format.xsl

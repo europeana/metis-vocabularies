@@ -1,0 +1,8 @@
+name: DeBias Vocabulary of contentious terms
+types:
+  - CONCEPT
+paths:
+  - https://rnd-2.eanadev.org/share/debias/vocabulary/
+examples:
+  - https://rnd-2.eanadev.org/share/debias/vocabulary/c_9_de.xml
+  - https://rnd-2.eanadev.org/share/debias/vocabulary/c_164_en.xml
