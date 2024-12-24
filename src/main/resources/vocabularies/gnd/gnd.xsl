@@ -1,342 +1,315 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        xmlns:gndo="https://d-nb.info/standards/elementset/gnd#"
-        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        xmlns:owl="http://www.w3.org/2002/07/owl#"
-        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-        xmlns:edm="http://www.europeana.eu/schemas/edm/"
-        xmlns:rdagr2="http://rdvocab.info/ElementsGr2/">
-    <xsl:param name="targetId"></xsl:param>
-    <xsl:output indent="yes" encoding="UTF-8"></xsl:output>
+<!--
+  Document   : gnd_updated.xsl
+  Authors    : Eleftheria, Hugo
+  Created on : ?
+  Updated on : 31.10.2024
+
+Changes:
+* mapped gnd#NomenclatureInBiologyOrChemistry, gnd#HistoricSingleEventOrEra, gnd#Work & gnd#ConferenseOrEvent to skos:Concept
+* mapped gnd#Company to edm:Agent
+* added 'xml:lang="de"' to literal values that are not lang tagged
+* un-mapped skos:altLabel for CorporateBodies, Persons and TerritorialCorpBodiesOrAdminUnits
+* mapped gndo:dateOfEstablishment to edm:begin for CorpBodies
+* simplified mappings and replaced the switch with templates for easier maintenance
+
+TODO:
+-
+-->
+<!DOCTYPE xsl:stylesheet [
+  <!ENTITY gnd "https://d-nb.info/standards/elementset/gnd#">
+  ]>
+<xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+
+  xmlns:gndo="https://d-nb.info/standards/elementset/gnd#"
+
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:edm="http://www.europeana.eu/schemas/edm/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:rdagr2="http://rdvocab.info/ElementsGr2/"
+
+  exclude-result-prefixes="gndo">
+
+    <xsl:param name="targetId"/>
+    <xsl:output indent="yes" encoding="UTF-8"/>
+
     <xsl:template match="/rdf:RDF">
-        <!-- Parent mapping: rdf:Description -> edm:Agent -->
-        <xsl:for-each select="./rdf:Description[@rdf:about=$targetId]">
-            <!-- This test is to ensure we are only getting the right types. -->
-            <xsl:choose>
-                <!-- For 'corporate bodies'. -->
-                <xsl:when test="rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#CorporateBody']">
-                    <edm:Agent>
-                        <!-- Attribute mapping: rdf:about -> rdf:about -->
-                        <xsl:if test="@rdf:about">
-                            <xsl:attribute name="rdf:about">
-                                <xsl:value-of select="@rdf:about"></xsl:value-of>
-                            </xsl:attribute>
-                        </xsl:if><!-- Tag mapping: owl:sameAs -> owl:sameAs -->
-                        <xsl:for-each select="./owl:sameAs">
-                            <owl:sameAs>
-                                <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-                                <xsl:if test="@rdf:resource">
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:value-of select="@rdf:resource"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:variantNameForTheCorporateBody -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:variantNameForTheCorporateBody">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:preferredNameForTheCorporateBody -> skos:prefLabel -->
-                        <xsl:for-each select="./gndo:preferredNameForTheCorporateBody">
-                            <skos:prefLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:prefLabel>
-                        </xsl:for-each>
-                    </edm:Agent>
-                </xsl:when>
-                <!-- For 'series of conference or event'. -->
-                <xsl:when test="rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#SeriesOfConferenceOrEvent']">
-                    <edm:Agent><!-- Attribute mapping: rdf:about -> rdf:about -->
-                        <xsl:if test="@rdf:about">
-                            <xsl:attribute name="rdf:about">
-                                <xsl:value-of select="@rdf:about"></xsl:value-of>
-                            </xsl:attribute>
+        <xsl:apply-templates select="rdf:Description[@rdf:about = $targetId]"/>
+    </xsl:template>
+
+    <!-- For 'corporate bodies' -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;CorporateBody'
+         or . = '&gnd;Company'
+         or . = '&gnd;SeriesOfConferenceOrEvent']]">
+        <edm:Agent>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForTheCorporateBody -> skos:prefLabel -->
+            <xsl:for-each select="gndo:preferredNameForTheCorporateBody">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:variantNameForTheCorporateBody -> skos:altLabel -->
+            <!--
+            <xsl:for-each select="gndo:variantNameForTheCorporateBody">
+                <skos:altLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:altLabel>
+            </xsl:for-each>
+             -->
+
+            <!-- Tag mapping: gndo:dateOfEstablishment -> edm:begin -->
+            <xsl:for-each select="gndo:dateOfEstablishment">
+                <edm:begin>
+                    <xsl:apply-templates select="." mode="label"/>
+                </edm:begin>
+            </xsl:for-each>
+
+
+            <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
+            <xsl:copy-of select="owl:sameAs" copy-namespaces="no"/>
+
+        </edm:Agent>
+
+    </xsl:template>
+
+
+    <!-- For 'differentiated person' and 'royal or member of a royal house'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;DifferentiatedPerson'
+         or . = '&gnd;RoyalOrMemberOfARoyalHouse']]">
+        <edm:Agent>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForThePerson -> skos:prefLabel -->
+            <xsl:for-each select="gndo:preferredNameForThePerson">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:dateOfBirth -> rdagr2:dateOfBirth -->
+            <xsl:for-each select="gndo:dateOfBirth">
+                <rdagr2:dateOfBirth>
+                    <!-- Attribute mapping: rdf:datatype -> rdf:datatype -->
+                    <xsl:copy-of select="@rdf:datatype"/>
+                    <!-- Text content mapping (only content with non-space characters) -->
+                    <xsl:for-each select="text()[normalize-space()]">
+                        <xsl:if test="position() &gt; 1">
+                            <xsl:text> </xsl:text>
                         </xsl:if>
-                        <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
-                        <xsl:for-each select="./owl:sameAs">
-                            <owl:sameAs>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:variantNameForTheConferenceOrEvent -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:variantNameForTheConferenceOrEvent">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:preferredNameForTheConferenceOrEvent -> skos:prefLabel -->
-                        <xsl:for-each select="./gndo:preferredNameForTheConferenceOrEvent">
-                            <skos:prefLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:prefLabel>
-                        </xsl:for-each>
-                    </edm:Agent>
-                </xsl:when>
-                <!-- For 'differentiated person' and 'royal or member of a royal house'. -->
-                <xsl:when test="rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#DifferentiatedPerson']
-                            or rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#RoyalOrMemberOfARoyalHouse']">
-                    <edm:Agent>
-                        <!-- Attribute mapping: rdf:about -> rdf:about -->
-                        <xsl:if test="@rdf:about">
-                            <xsl:attribute name="rdf:about">
-                                <xsl:value-of select="@rdf:about"></xsl:value-of>
-                            </xsl:attribute>
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </xsl:for-each>
+                </rdagr2:dateOfBirth>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:dateOfDeath -> rdagr2:dateOfDeath -->
+            <xsl:for-each select="gndo:dateOfDeath">
+                <rdagr2:dateOfDeath>
+                    <!-- Attribute mapping: rdf:datatype -> rdf:datatype -->
+                    <xsl:copy-of select="@rdf:datatype"/>
+                    <!-- Text content mapping (only content with non-space characters) -->
+                    <xsl:for-each select="text()[normalize-space()]">
+                        <xsl:if test="position() &gt; 1">
+                            <xsl:text> </xsl:text>
                         </xsl:if>
-                        <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
-                        <xsl:for-each select="./owl:sameAs">
-                            <owl:sameAs>
-                                <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-                                <xsl:if test="@rdf:resource">
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:value-of select="@rdf:resource"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:dateOfBirth -> rdagr2:dateOfBirth -->
-                        <xsl:for-each select="./gndo:dateOfBirth">
-                            <rdagr2:dateOfBirth>
-                                <!-- Attribute mapping: rdf:datatype -> rdf:datatype -->
-                                <xsl:if test="@rdf:datatype">
-                                    <xsl:attribute name="rdf:datatype">
-                                        <xsl:value-of select="@rdf:datatype"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </rdagr2:dateOfBirth>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:variantNameForThePerson -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:variantNameForThePerson">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:dateOfDeath -> rdagr2:dateOfDeath -->
-                        <xsl:for-each select="./gndo:dateOfDeath">
-                            <rdagr2:dateOfDeath>
-                                <!-- Attribute mapping: rdf:datatype -> rdf:datatype -->
-                                <xsl:if test="@rdf:datatype">
-                                    <xsl:attribute name="rdf:datatype">
-                                        <xsl:value-of select="@rdf:datatype"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </rdagr2:dateOfDeath>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:preferredNameForThePerson -> skos:prefLabel -->
-                        <xsl:for-each select="./gndo:preferredNameForThePerson">
-                            <skos:prefLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:prefLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:surname -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:surname">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                    </edm:Agent>
-                </xsl:when>
-                <!-- For 'subject heading senso stricto'. -->
-                <xsl:when test="rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#SubjectHeadingSensoStricto']">
-                    <skos:Concept>
-                        <!-- Attribute mapping: rdf:about -> rdf:about -->
-                        <xsl:if test="@rdf:about">
-                            <xsl:attribute name="rdf:about">
-                                <xsl:value-of select="@rdf:about"></xsl:value-of>
-                            </xsl:attribute>
-                        </xsl:if>
-                        <!-- Tag mapping: gndo:preferredNameForTheSubjectHeading -> skos:prefLabel -->
-                        <xsl:for-each select="./gndo:preferredNameForTheSubjectHeading">
-                            <skos:prefLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:prefLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:variantNameForTheSubjectHeading -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:variantNameForTheSubjectHeading">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:gndSubjectCategory -> skos:exactMatch -->
-                        <xsl:for-each select="./gndo:gndSubjectCategory">
-                            <skos:exactMatch>
-                                <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-                                <xsl:if test="@rdf:resource">
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:value-of select="@rdf:resource"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                            </skos:exactMatch>
-                        </xsl:for-each>
-                    </skos:Concept>
-                </xsl:when>
-                <!-- For 'territorial corporate body or administrative unit'. -->
-                <xsl:when test="rdf:type/@rdf:resource[.='https://d-nb.info/standards/elementset/gnd#TerritorialCorporateBodyOrAdministrativeUnit']">
-                    <edm:Place>
-                        <!-- Attribute mapping: rdf:about -> rdf:about -->
-                        <xsl:if test="@rdf:about">
-                            <xsl:attribute name="rdf:about">
-                                <xsl:value-of select="@rdf:about"></xsl:value-of>
-                            </xsl:attribute>
-                        </xsl:if>
-                        <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
-                        <xsl:for-each select="./owl:sameAs">
-                            <owl:sameAs>
-                                <!-- Attribute mapping: rdf:resource -> rdf:resource -->
-                                <xsl:if test="@rdf:resource">
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:value-of select="@rdf:resource"></xsl:value-of>
-                                    </xsl:attribute>
-                                </xsl:if>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:oldAuthorityNumber -> owl:sameAs -->
-                        <xsl:for-each select="./gndo:oldAuthorityNumber">
-                            <owl:sameAs>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:gndIdentifier -> owl:sameAs -->
-                        <xsl:for-each select="./gndo:gndIdentifier">
-                            <owl:sameAs>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </owl:sameAs>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:preferredNameForThePlaceOrGeographicName -> skos:prefLabel -->
-                        <xsl:for-each select="./gndo:preferredNameForThePlaceOrGeographicName">
-                            <skos:prefLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:prefLabel>
-                        </xsl:for-each>
-                        <!-- Tag mapping: gndo:variantNameForThePlaceOrGeographicName -> skos:altLabel -->
-                        <xsl:for-each select="./gndo:variantNameForThePlaceOrGeographicName">
-                            <skos:altLabel>
-                                <!-- Text content mapping (only content with non-space characters) -->
-                                <xsl:for-each select="text()[normalize-space()]">
-                                    <xsl:if test="position() &gt; 1">
-                                        <xsl:text> </xsl:text>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(.)"></xsl:value-of>
-                                </xsl:for-each>
-                            </skos:altLabel>
-                        </xsl:for-each>
-                    </edm:Place>
-                </xsl:when>
-            </xsl:choose>
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </xsl:for-each>
+                </rdagr2:dateOfDeath>
+            </xsl:for-each>
+
+            <xsl:copy-of select="owl:sameAs" copy-namespaces="no"/>
+
+        </edm:Agent>
+    </xsl:template>
+
+    <!-- For 'subject heading senso stricto' & 'historic single events or eras'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;SubjectHeadingSensoStricto'
+         or . = '&gnd;HistoricSingleEventOrEra']]">
+        <skos:Concept>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForTheSubjectHeading -> skos:prefLabel -->
+            <xsl:for-each select="gndo:preferredNameForTheSubjectHeading">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:variantNameForTheSubjectHeading -> skos:altLabel -->
+            <xsl:for-each select="gndo:variantNameForTheSubjectHeading">
+                <skos:altLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:altLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:definition -> skos:note -->
+            <xsl:for-each select="gndo:definition">
+                <skos:note>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:note>
+            </xsl:for-each>
+
+            <xsl:copy-of select="skos:broadMatch" copy-namespaces="no"/>
+            <xsl:copy-of select="skos:closeMatch" copy-namespaces="no"/>
+
+            <!-- Tag mapping: owl:sameAs -> skos:exactMatch -->
+            <xsl:for-each select="owl:sameAs">
+                <skos:exactMatch>
+                    <xsl:copy-of select="@rdf:resource"/>
+                </skos:exactMatch>
+            </xsl:for-each>
+
+        </skos:Concept>
+    </xsl:template>
+
+    <!-- For 'NomenclatureInBiologyOrChemistry'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;NomenclatureInBiologyOrChemistry']]">
+        <skos:Concept>
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForTheSubjectHeading -> skos:prefLabel -->
+            <xsl:for-each select="gndo:preferredNameForTheSubjectHeading">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <xsl:copy-of select="skos:closeMatch" copy-namespaces="no"/>
+
+            <!-- Tag mapping: owl:sameAs -> skos:exactMatch -->
+            <xsl:for-each select="owl:sameAs">
+                <skos:exactMatch>
+                    <xsl:copy-of select="@rdf:resource"/>
+                </skos:exactMatch>
+            </xsl:for-each>
+
+        </skos:Concept>
+    </xsl:template>
+
+    <!-- For 'Works'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;Work']]">
+        <skos:Concept>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <xsl:for-each select="gndo:preferredNameForTheWork">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:biographicalOrHistoricalInformation -> skos:note -->
+            <xsl:for-each select="gndo:biographicalOrHistoricalInformation">
+                <skos:note>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:note>
+            </xsl:for-each>
+
+            <!-- Tag mapping: owl:sameAs -> skos:exactMatch -->
+            <xsl:for-each select="owl:sameAs">
+                <skos:exactMatch>
+                    <xsl:copy-of select="@rdf:resource"/>
+                </skos:exactMatch>
+            </xsl:for-each>
+
+        </skos:Concept>
+    </xsl:template>
+
+    <!-- For 'Conference Or Event'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;ConferenceOrEvent']]">
+        <skos:Concept>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForTheSubjectHeading -> skos:prefLabel -->
+            <xsl:for-each select="gndo:preferredNameForTheSubjectHeading">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:variantNameForTheSubjectHeading -> skos:altLabel -->
+            <xsl:for-each select="gndo:variantNameForTheSubjectHeading">
+                <skos:altLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:altLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:definition -> skos:note -->
+            <xsl:for-each select="gndo:definition">
+                <skos:note>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:note>
+            </xsl:for-each>
+
+            <!-- Tag mapping: owl:sameAs -> skos:exactMatch -->
+            <xsl:copy-of select="owl:sameAs" copy-namespaces="no"/>
+
+        </skos:Concept>
+    </xsl:template>
+
+    <!-- For 'territorial corporate body or administrative unit'. -->
+    <xsl:template match="rdf:Description[rdf:type/@rdf:resource[
+            . = '&gnd;TerritorialCorporateBodyOrAdministrativeUnit']]">
+        <edm:Place>
+
+            <xsl:copy-of select="@rdf:about"/>
+
+            <!-- Tag mapping: gndo:preferredNameForThePlaceOrGeographicName -> skos:prefLabel -->
+            <xsl:for-each select="./gndo:preferredNameForTheCorporateBody">
+                <skos:prefLabel>
+                    <xsl:apply-templates select="." mode="label"/>
+                </skos:prefLabel>
+            </xsl:for-each>
+
+            <!-- Tag mapping: gndo:oldAuthorityNumber -> dc:identifier -->
+            <xsl:for-each select="./gndo:oldAuthorityNumber">
+                <dc:identifier>
+                    <xsl:copy-of select="text()"/>
+                </dc:identifier>
+            </xsl:for-each>
+
+            <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
+            <xsl:copy-of select="owl:sameAs" copy-namespaces="no"/>
+
+        </edm:Place>
+    </xsl:template>
+
+    <!-- To cover unmapped entities -->
+    <xsl:template match="rdf:Description"/>
+
+    <!-- to copy labels and set a default language to German -->
+    <xsl:template match="node()" mode="label">
+        <xsl:choose>
+            <xsl:when test="@xml:lang">
+                <xsl:copy-of select="@xml:lang"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="xml:lang">
+                    <xsl:text>de</xsl:text>
+                </xsl:attribute>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:for-each select="text()[normalize-space()]">
+            <xsl:if test="position() &gt; 1">
+                <xsl:text> </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="normalize-space(.)"/>
         </xsl:for-each>
     </xsl:template>
+
 </xsl:stylesheet>
