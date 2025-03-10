@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Document   : debias2concept.xsl
-  Author     : Hugo
-  Created on : 13.12.2024
-  Updated on : 13.12.2024
-  Version    : 1.0
+  Author     : Hugo Manguinhas
+  Created on : ?
+  Updated on : 28.02.2025
+  Version    : v1.2
 
 Changes:
+* support for external dereferencing
+* generalised scanning for resources
 -->
 <xsl:stylesheet version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -26,22 +28,15 @@ Changes:
   exclude-result-prefixes="debias dct euvoc owl skosxl">
 
   <xsl:param name="targetId"/>
-  <xsl:param name="fast" select="false()"/>
 
   <xsl:output indent="yes" encoding="UTF-8"/>
 
   <xsl:template match="rdf:RDF">
-    <xsl:choose>
-      <xsl:when test='$fast'>
-        <xsl:apply-templates select="/rdf:RDF/skos:Concept[@rdf:about = $targetId]"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="//skos:Concept[@rdf:about = $targetId]"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="lib:findResource($targetId,/rdf:RDF)"
+      mode="issue"/>
   </xsl:template>
 
-  <xsl:template match="skos:Concept">
+  <xsl:template match="skos:Concept | rdf:Description" mode="issue">
     <skos:Concept>
 
       <xsl:copy-of select="@rdf:about"/>
@@ -56,42 +51,14 @@ Changes:
 
       <!-- skos:altLabel  -->
       <xsl:for-each select="debias:hasSuggestedTerm">
-        <xsl:choose>
-          <xsl:when test="@rdf:resource">
-            <xsl:variable name="ref" select="@rdf:resource"/>
-            <xsl:choose>
-              <xsl:when test='$fast'>
-                <xsl:apply-templates select="/rdf:RDF/debias:SuggestedTerm[@rdf:about=$ref]"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="//debias:SuggestedTerm[@rdf:about=$ref]"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="debias:SuggestedTerm"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="lib:getResource(.,/rdf:RDF)"
+          mode="sterm"/>
       </xsl:for-each>
 
       <!-- skos:hiddenLabel  -->
       <xsl:for-each select="debias:hasContentiousTerm">
-        <xsl:choose>
-          <xsl:when test="@rdf:resource">
-            <xsl:variable name="ref" select="@rdf:resource"/>
-            <xsl:choose>
-              <xsl:when test='$fast'>
-                <xsl:apply-templates select="/rdf:RDF/debias:ContentiousTerm[@rdf:about=$ref]"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="//debias:ContentiousTerm[@rdf:about=$ref]"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="debias:ContentiousTerm"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="lib:getResource(.,/rdf:RDF)"
+          mode="cterm"/>
       </xsl:for-each>
 
       <!-- skos:definition -->
@@ -106,22 +73,16 @@ Changes:
       <!-- debias:hasContentiousTerm / debias:hasSuggestionNote / rdf:value -->
       <xsl:variable name="scopeNotes">
         <xsl:for-each select="debias:hasContentiousTerm">
-          <xsl:choose>
-            <xsl:when test="@rdf:resource">
-              <xsl:variable name="ref" select="@rdf:resource"/>
-              <xsl:choose>
-                <xsl:when test='$fast'>
-                  <xsl:apply-templates mode="scopeNote" select="/rdf:RDF/debias:ContentiousTerm[@rdf:about=$ref]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:apply-templates mode="scopeNote" select="//debias:ContentiousTerm[@rdf:about=$ref]"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates mode="scopeNote" select="debias:ContentiousTerm"/>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:variable name="contentiousTerm" select="lib:getResource(.,/rdf:RDF)"/>
+          <xsl:for-each select="$contentiousTerm/debias:hasSuggestionNote">
+            <xsl:variable name="suggestedTerm" select="lib:getResource(.,/rdf:RDF)"/>
+            <xsl:for-each select="$suggestedTerm/rdf:value">
+              <skos:scopeNote>
+                <xsl:copy-of select="@xml:lang"/>
+                <xsl:copy-of select="text()"/>
+              </skos:scopeNote>
+            </xsl:for-each>
+          </xsl:for-each>
         </xsl:for-each>
       </xsl:variable>
       <xsl:variable name="scopeNotesSorted">
@@ -154,7 +115,7 @@ Changes:
   </xsl:template>
 
 
-  <xsl:template match="debias:ContentiousTerm">
+  <xsl:template match="debias:ContentiousTerm | rdf:Description" mode="cterm">
     <xsl:for-each select="skosxl:literalForm">
       <skos:hiddenLabel>
         <xsl:copy-of select="@xml:lang"/>
@@ -163,7 +124,7 @@ Changes:
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template match="debias:SuggestedTerm">
+  <xsl:template match="debias:SuggestedTerm | rdf:Description" mode="sterm">
     <xsl:for-each select="skosxl:literalForm">
       <skos:altLabel>
         <xsl:copy-of select="@xml:lang"/>
@@ -172,41 +133,65 @@ Changes:
     </xsl:for-each>
   </xsl:template>
 
-  <!-- debias:hasContentiousTerm / debias:hasSuggestionNote / rdf:value -->
-  <xsl:template match="debias:ContentiousTerm" mode="scopeNote">
-    <xsl:for-each select="debias:hasSuggestionNote">
-      <xsl:choose>
-        <xsl:when test="@rdf:resource">
-          <xsl:variable name="ref" select="@rdf:resource"/>
-          <xsl:choose>
-            <xsl:when test='$fast'>
-              <xsl:apply-templates mode="scopeNote" select="/rdf:RDF/debias:SuggestionNote[@rdf:about=$ref]"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates mode="scopeNote" select="//debias:SuggestionNote[@rdf:about=$ref]"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates mode="scopeNote" select="debias:SuggestionNote"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-  </xsl:template>
-
-  <xsl:template match="debias:SuggestionNote" mode="scopeNote">
-    <xsl:for-each select="rdf:value">
-      <skos:scopeNote>
-        <xsl:copy-of select="@xml:lang"/>
-        <xsl:copy-of select="text()"/>
-      </skos:scopeNote>
-    </xsl:for-each>
-  </xsl:template>
 
   <xsl:function name="lib:sameLiteral" as="xs:boolean">
     <xsl:param name="elem1"/>
     <xsl:param name="elem2"/>
     <xsl:sequence select="($elem1/@xml:lang=$elem2/@xml:lang) and ($elem1/text()=$elem2/text())"/>
+  </xsl:function>
+
+  <xsl:function name="lib:getResource">
+    <xsl:param name="elem"/>
+    <xsl:param name="root"/>
+
+    <xsl:variable name="ref" select="$elem/@rdf:resource"/>
+    <xsl:choose>
+      <xsl:when test="$ref">
+        <xsl:variable name="res" select="lib:findResource($ref,$root)"/>
+        <xsl:choose>
+          <xsl:when test='not($res)'>
+            <xsl:sequence select="lib:getResourceExternal($ref)"/>
+          </xsl:when>
+          <xsl:when test='$res/rdf:type'>
+            <xsl:sequence select="$res"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:sequence select="lib:getResourceExternal($res/@rdf:about)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="$elem/*"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <xsl:function name="lib:findResource" as="node()*">
+    <xsl:param name="ref"/>
+    <xsl:param name="root"/>
+
+    <xsl:variable name="res" select="$root/*[@rdf:about=$ref]"/>
+    <xsl:choose>
+      <xsl:when test='$res'>
+        <xsl:sequence select="$res"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="$root//*[@rdf:about=$ref]"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <xsl:function name="lib:getResourceExternal">
+    <xsl:param name="ref"/>
+
+    <xsl:variable name="doc" select="document(lib:fixURL($ref))"/>
+    <xsl:sequence select="lib:findResource($ref,$doc/rdf:RDF)"/>
+  </xsl:function>
+
+  <xsl:function name="lib:fixURL" as="xs:string">
+    <xsl:param name="ref"/>
+    <xsl:value-of select="replace($ref, 'http://data.europa.eu/c4p/data/'
+                                          , 'https://publications.europa.eu/resource/authority/c4p/data/')"/>
   </xsl:function>
 
 </xsl:stylesheet>

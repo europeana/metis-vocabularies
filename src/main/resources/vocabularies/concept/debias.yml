@@ -1,8 +1,13 @@
-name: DeBias Vocabulary of contentious terms
+name: DeBias vocabulary of contentious terms
 types:
   - CONCEPT
 paths:
+  - http://data.europa.eu/c4p/data/
   - https://rnd-2.eanadev.org/share/debias/vocabulary/
 examples:
+  - http://data.europa.eu/c4p/data/c_2_en
+  - http://data.europa.eu/c4p/data/c_1_fr
+  - http://data.europa.eu/c4p/data/c_9_de
+  - http://data.europa.eu/c4p/data/c_164_en
   - https://rnd-2.eanadev.org/share/debias/vocabulary/c_9_de.xml
   - https://rnd-2.eanadev.org/share/debias/vocabulary/c_164_en.xml
