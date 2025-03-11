@@ -186,7 +186,9 @@
   <!-- Template for edm:hasMet -->
   <xsl:template match="dbo:notableWork/rdf:Description">
     <xsl:element name="edm:hasMet">
-      <xsl:copy-of select="@rdf:about" />
+      <xsl:attribute name="rdf:resource">
+        <xsl:value-of select="@rdf:about"/>
+      </xsl:attribute>
     </xsl:element>
   </xsl:template>
   <!--+++++++++++++++++++++++++++++ FUNCTIONS ++++++++++++++++++++++++++++++++-->
