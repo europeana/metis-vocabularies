@@ -3,12 +3,13 @@
   Document   : debias2concept.xsl
   Author     : Hugo Manguinhas
   Created on : ?
-  Updated on : 28.02.2025
-  Version    : v1.2
+  Updated on : 21.03.2025
+  Version    : v1.3
 
 Changes:
 * support for external dereferencing
 * generalised scanning for resources
+* support for dereferencing of contentious terms as issues
 -->
 <xsl:stylesheet version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -32,14 +33,25 @@ Changes:
   <xsl:output indent="yes" encoding="UTF-8"/>
 
   <xsl:template match="rdf:RDF">
-    <xsl:apply-templates select="lib:findResource($targetId,/rdf:RDF)"
-      mode="issue"/>
+    <xsl:variable name="root" select="/rdf:RDF"/>
+    <xsl:variable name="node" select="lib:findResource($targetId,$root)"/>
+    <xsl:choose>
+      <xsl:when test="lib:isContentiousTerm($node)">
+        <xsl:apply-templates select="lib:getResource($node/debias:hasContentiousIssue,$root)" mode="issue"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="$node" mode="issue"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+
   </xsl:template>
 
   <xsl:template match="skos:Concept | rdf:Description" mode="issue">
+
     <skos:Concept>
 
-      <xsl:copy-of select="@rdf:about"/>
+      <xsl:attribute name="rdf:about" select="$targetId"/>
 
       <!-- skos:prefLabel -->
       <xsl:for-each select="dct:title">
@@ -138,6 +150,13 @@ Changes:
     <xsl:param name="elem1"/>
     <xsl:param name="elem2"/>
     <xsl:sequence select="($elem1/@xml:lang=$elem2/@xml:lang) and ($elem1/text()=$elem2/text())"/>
+  </xsl:function>
+
+  <xsl:function name="lib:isContentiousTerm" as="xs:boolean">
+    <xsl:param name="elem"/>
+
+    <xsl:sequence select="($elem/name()='ContentiousTerm')
+                           or ($elem/rdf:type/@rdf:resource='http://data.europa.eu/c4p/ontology#ContentiousTerm')"/>
   </xsl:function>
 
   <xsl:function name="lib:getResource">
