@@ -1,9 +1,11 @@
-name: GeonamesVersion2
+name: Geonames
 types:
 - PLACE
 paths:
 - https://sws.geonames.org/
 parentIterations: 1
+suffix: about.rdf
 examples:
 - https://sws.geonames.org/1123961/
 - https://sws.geonames.org/3175395/
+- https://sws.geonames.org/2988507/

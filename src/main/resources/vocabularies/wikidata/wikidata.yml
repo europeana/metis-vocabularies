@@ -6,6 +6,7 @@ types:
 - TIMESTAMP
 paths:
 - http://www.wikidata.org/entity/
+suffix: .rdf
 examples:
 - http://www.wikidata.org/entity/Q3930
 - http://www.wikidata.org/entity/Q604667

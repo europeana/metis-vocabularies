@@ -3,6 +3,7 @@ types:
 - CONCEPT
 paths:
 - http://udcdata.info/rdf
+userAgent: "Apache-HttpClient/5 (Java/21)"
 examples:
 - http://udcdata.info/rdf/026874
 - http://udcdata.info/rdf/065280

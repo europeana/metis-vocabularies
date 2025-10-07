@@ -45,7 +45,10 @@ to be a substring of another. This guarantees that for any entity ID (`rdf:about
 at most one vocabulary that matches it.
 * **suffix** (String value): the suffix to be applied to the entity's ID value (`rdf:about`) in
 order to obtain a workable download URL. Common values are `.edm` or `.rdf`, but other values can
-be set. This field is optional (with the empty String as default value).  
+be set. This field is optional (with the empty String as default value).
+* **userAgent** (String value): the `User agent` HTTP header value to set when querying this
+vocabulary. If this value is absent (or `null`) a default value will be used in HTTP connections to 
+this vocabulary.  
 * **parentIterations** (Integer value): the number of times that we will resolve/dereference parent
 entity references (and include the entities in the dereference result). So this determines the 
 maximum remoteness of parents (`skos:broader` or `dc:isPartOf`) that will be included. This value 
