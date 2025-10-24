@@ -4,8 +4,8 @@
   Document   : wikidata.xsl
   Author     : hmanguinhas
   Created on : October 13, 2019
-  Updated on : June 27, 2023
-  Version    : v1.7
+  Updated on : October 24, 2025
+  Version    : v1.8
 
 Location: 
 https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/wikidata/wikidata.xsl
@@ -20,6 +20,10 @@ DONE:
   + fixed IconClass URIs: https://europeana.atlassian.net/browse/MET-5006
   + fixed DBpedia mapping for concepts
   + improved mapping for IconClass and UNESCO to use the wdtn (normalised) property
+  + expanded Place to cover complex buildings
+  + added native name for places and agents
+  + added default pref label for agents using 'mul'
+  + removed duplicate labels
 
 TODO:
   - monitor circular references (especially via indirect links)
@@ -68,6 +72,7 @@ TODO:
 
     <!-- Portal languages (27) -->
     <xsl:variable name="langs">en,pl,de,nl,fr,it,da,sv,el,fi,hu,cs,sl,et,pt,es,lt,lv,bg,ro,sk,hr,ga,mt,no,ca,ru,eu</xsl:variable>
+    <xsl:variable name="langList" select="tokenize($langs,',')"/>
 
     <!-- Co-reference mapping table -->
     <xsl:variable name="map">
@@ -222,6 +227,7 @@ TODO:
 
         <!-- Places -->
 
+
             <!-- instance of: human settlement (Q486972), country (Q6256)
                             , historical country (Q3024240), City (Q515)
                             , third-level administrative country subdivision (Q13221722)
@@ -232,6 +238,7 @@ TODO:
                             , memorial (Q6642119), war memorial (Q575759)
                             , archaeological site (Q839954)
                             , human-made geographic feature (Q811430)
+                            , building complex (Q1497364)
                              -->
             <xsl:when test="$instanceOf[
                   @rdf:resource='http://www.wikidata.org/entity/Q486972'
@@ -253,6 +260,7 @@ TODO:
                or @rdf:resource='http://www.wikidata.org/entity/Q575759'
                or @rdf:resource='http://www.wikidata.org/entity/Q839954'
                or @rdf:resource='http://www.wikidata.org/entity/Q811430'
+               or @rdf:resource='http://www.wikidata.org/entity/Q1497364'
                 ]">
                 <xsl:call-template name="Place"/>
             </xsl:when>
@@ -472,7 +480,7 @@ TODO:
 
             <!-- labels -->
             <xsl:call-template name="labels">
-                <xsl:with-param name="alt" select="skos:altLabel"/>
+                <xsl:with-param name="alt" select="skos:altLabel | wdt:P1559 | wdt:P1705"/>
             </xsl:call-template>
 
             <!-- descriptions -->
@@ -534,8 +542,9 @@ TODO:
 
             <!-- labels -->
             <xsl:call-template name="labels">
-                <xsl:with-param name="alt" select="skos:altLabel | wdt:P742
-                                                 | wdt:P1477 | wdt:P2562"/>
+                <xsl:with-param name="alt" select="skos:altLabel | wdt:P1559 | wdt:P1705
+                                                 | wdt:P742 | wdt:P1477 | wdt:P2562"/>
+                <xsl:with-param name="def" select="true()"/>
             </xsl:call-template>
 
             <!-- description -->
@@ -666,7 +675,7 @@ TODO:
 
             <!-- labels -->
             <xsl:call-template name="labels">
-                <xsl:with-param name="alt" select="skos:altLabel"/>
+                <xsl:with-param name="alt" select="skos:altLabel | wdt:P1705"/>
             </xsl:call-template>
 
             <!-- descriptions -->
@@ -912,26 +921,42 @@ TODO:
 
     <!--+++++++++++++++++++++++++++++ LABELS ++++++++++++++++++++++++++++++++-->
 
+    <xsl:template match="node()" mode="prefLabel">
+	    <xsl:element name="skos:prefLabel">
+	        <xsl:copy-of select="@xml:lang"/>
+	        <xsl:value-of select="lib:cleanText(.)"/>
+	    </xsl:element>
+    </xsl:template>
+
+		<!-- wdt:P1559 --> 
     <xsl:template name="labels">
         <xsl:param name="alt" select="()"/>
+        <xsl:param name="def" select="false()"/>
 
         <xsl:variable name="labels"
-                      select="rdfs:label[lib:isAcceptableLang(@xml:lang)
-                                     and lib:isAcceptableLabel(text())]"/>
+                      select="rdfs:label[lib:isAcceptableLiteral(.)]"/>
 
-        <xsl:for-each select="$labels">
-            <xsl:element name="skos:prefLabel">
-                <xsl:copy-of select="@xml:lang"/>
-                <xsl:value-of select="lib:cleanText(.)"/>
-            </xsl:element>
-        </xsl:for-each>
+        <xsl:apply-templates select="$labels" mode="prefLabel"/>
+
+        <xsl:variable name="default" select="if ($def) then lib:cleanText(rdfs:label[@xml:lang='mul'][1]/text()) else ''"/>
+
+ 		<xsl:if test="$default">
+			<xsl:for-each select="$langList">
+				<xsl:if test="not(some $x in $labels satisfies fn:matches($x/@xml:lang,.))">
+				    <xsl:element name="skos:prefLabel">
+				        <xsl:attribute name="xml:lang" select="."/>
+				        <xsl:value-of select="$default"/>
+				    </xsl:element>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
 
         <xsl:for-each select="$alt">
             <xsl:variable name="literal" select="text()"/>
             <xsl:variable name="lang"    select="@xml:lang"/>
-            <xsl:if test="lib:isAcceptableLang($lang) 
-                   and lib:isAcceptableLabel($literal)
-                   and not($labels[text()=$literal and @xml:lang=$lang])">
+            <xsl:if test="$default != $literal and lib:isAcceptableLiteral(.) 
+                   and not($labels[text()=$literal and @xml:lang=$lang])
+                   and not(preceding-sibling::*[text()=$literal and @xml:lang=$lang])">
                 <xsl:element name="skos:altLabel">
                     <xsl:copy-of select="@xml:lang"/>
                     <xsl:value-of select="lib:cleanText($literal)" />
@@ -940,6 +965,13 @@ TODO:
         </xsl:for-each>
 
     </xsl:template>
+
+    <xsl:function name="lib:isAcceptableLiteral" as="xs:boolean">
+        <xsl:param name="node"/>
+
+        <xsl:sequence select="lib:isAcceptableLang($node/@xml:lang) 
+                          and lib:isAcceptableLabel($node/text())"/>
+    </xsl:function>
 
     <xsl:function name="lib:isAcceptableLang" as="xs:boolean">
         <xsl:param name="string"/>
