@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+  Document   : geonames.xsl
+  Author     : hmanguinhas
+  Updated on : October 28, 2025
+
+Location: 
+https://github.com/europeana/metis-vocabularies/blob/develop/src/main/resources/vocabularies/place/geonames.xsl
+
+DONE:  
+  + Expanded template to cover rdf:Description or gn:Feature as XML elements
+  
+-->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0"
                 xmlns:dcterms="http://purl.org/dc/terms/"
@@ -33,10 +46,11 @@
     </xsl:template>
 
     <xsl:template match="rdf:RDF">
-        <xsl:apply-templates select="gn:Feature[@rdf:about=$targetId]"/>
+        <xsl:apply-templates select="*[@rdf:about=$targetId]"/>
     </xsl:template>
 
-    <xsl:template match="gn:Feature">
+    <xsl:template match="gn:Feature
+                       | rdf:Description[rdf:type/@rdf:resource='http://www.geonames.org/ontology#Feature']">
 
         <xsl:element name="edm:Place">
 
@@ -87,6 +101,9 @@
 
         </xsl:element>
 
+    </xsl:template>
+
+    <xsl:template match="*">
     </xsl:template>
 
     <!--                          LANGUAGE UTILS                             -->
