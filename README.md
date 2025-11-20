@@ -29,6 +29,14 @@ future without the risk of bloating this directory file.
 Each vocabulary in the directory file has exactly one **unique** metadata file. This YAML file 
 contains the following information:
 
+Additionally, the file name (including the relative path) is guaranteed to be unique and may
+therefore be used as unique identifier for the vocabulary. This means that it is not recommended to
+change the name and location of these files without emptying the caches in the dereference service.
+
+### Metadata fields
+
+Metadata files may contain the following fields. Fields are optional, unless otherwise indicated.
+
 * **name** (String value): the **unique** human-readable name of the vocabulary, by which you can 
 recognise the vocabulary. This field is obligatory.
 * **types** (String value): the type(s) of the vocabulary, i.e. the kind(s) of conceptual classes 
@@ -43,9 +51,15 @@ starts with either one of the given paths. At least one path must be given. Thes
 collide with each other or with paths from other vocabularies, in the sense that one is not allowed
 to be a substring of another. This guarantees that for any entity ID (`rdf:about`) there is always 
 at most one vocabulary that matches it.
-* **suffix** (String value): the suffix to be applied to the entity's ID value (`rdf:about`) in
-order to obtain a workable download URL. Common values are `.edm` or `.rdf`, but other values can
-be set. This field is optional (with the empty String as default value).
+* **suffix** (String value - ***DEPRECATED***): the suffix to be applied to the entity's ID value 
+(`rdf:about`) in order to obtain a workable download URL. Common values are `.edm` or `.rdf`, but 
+other values can be set. This field is optional (with the empty String as default value). The use of 
+this field is discouraged: use `resourceUrlTemplate` instead. 
+* **resourceUrlTemplate** (String value): the template to apply to generate the URL where a resource
+may be obtained, based on various input data, including the resource ID. The reality is that 
+resource IDs may not be resolvable to the RDF+XML version of the resource (or may not be resolvable 
+at all). See the dedicated section below for more information on the template options, including
+useful examples.
 * **userAgent** (String value): the `User agent` HTTP header value to set when querying this
 vocabulary. If this value is absent (or `null`) a default value will be used in HTTP connections to 
 this vocabulary.  
@@ -61,6 +75,15 @@ vocabulary applied to the given entity ID returns an object of the given type).
 IDs that should **not** be supported by this vocabulary. This may be used for testing purposes (to 
 check that applying this vocabulary applied to the given entity ID neither fails nor returns a 
 result). 
+
+> [!WARNING]
+> The field `suffix` is deprecated, and scheduled for removal. Its use is strongly discouraged. Use 
+> the field `resourceUrlTemplate` instead. See the dedicated section below for more information on
+> the template options, including an example on how to achieve the suffix functionality using this 
+> field. If both `suffix` and `resourceUrlTemplate` are used for the same vocabulary, the 
+> `suffix` value will be ignored.
+
+### Example
 
 Here follows an example metadata file:
 
@@ -80,9 +103,43 @@ counterExamples:
 - http://www.yso.fi/onto/yso/p105069
 ```
 
-Additionally, the file name (including the relative path) is guaranteed to be unique and may 
-therefore be used as unique identifier for the vocabulary. This means that it is not recommended to 
-change the name and location of these files without emptying the caches in the dereference service.
+### Resource URL templating using the field `resourceUrlTemplate`
+
+As noted above, the reality is that resource IDs may not be resolvable to the RDF+XML version of
+the resource (or may not be resolvable at all). The `resourceUrlTemplate` field is available to 
+facilitate generating resolvable URLs from various input data, including the resource ID, for the 
+retrieval of the entity.
+
+This generation works through a template for the resource URL that can be evaluated for
+different input. The template may (in fact should) contain parameters declared using the following
+syntax: `${PARAMETER}`, where `PARAMETER` represents a function pipeline consisting of a start 
+function followed by zero or more piped functions, separated by the pipe character `|`. 
+
+A start function starts the pipeline with a value based on the input. Successive piped functions 
+modify the previous function's output in some way. The result of the last function is the result of 
+resolving the parameter. Generating the resource URL consists of resolving all parameter
+occurrences in this way.
+
+Currently supported start functions:
+* `resourceId`: this starts the pipeline with the ID of the resource that is to be retrieved.
+
+Currently supported piped functions:
+* `urlQueryEscape`: this takes the previous function's output and converts it for inclusion in a 
+URL's query segment by escaping the forbidden characters.
+
+Notable example templates:
+
+* The template `${resourceId}` is the most basic template: this indicates that
+the resource URL is exactly equal to the resource ID. This is the default value, and if no value 
+of `resourceUrlTemplate` is provided, this is the behavior.
+* A common use case is that a file extension is missing. This can be corrected in a template
+like this: `${resourceId}.rdf`. This indicates that the resource ID should be followed by the 
+literal `.rdf`.
+* The template `https://example.com/entities?id=${resourceId|urlQueryEscape}`
+is an example of a start function followed by one piped function. This template indicates that the
+resource ID should be URL-escaped and put as value for a query parameter for an API call.
+
+### Evolution of the metatada fields
 
 **Note:** several old fields have been removed from this format.
 * The `url` and `rules` fields have been merged into the `paths` field, to make things more clear.
