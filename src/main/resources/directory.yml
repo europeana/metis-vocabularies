@@ -74,6 +74,26 @@
 - metadata: vocabularies/concept/partage_plus.yml
   mapping: vocabularies/concept/partage_plus.xsl
 
+# Rijksdienst Cultureel Erfgoed - Archeologisch Basis Register (ABR)
+- metadata: vocabularies/cultureelerfgoed/abr.yml
+  mapping: vocabularies/cultureelerfgoed/abr.xsl
+
+# Rijksdienst Cultureel Erfgoed - Cultural Heritage Thesaurus (CHT)
+- metadata: vocabularies/cultureelerfgoed/cht.yml
+  mapping: vocabularies/cultureelerfgoed/cht.xsl
+
+# Rijksdienst Cultureel Erfgoed - Common Thesaurus for Audiovisual Archives (GTAA)
+- metadata: vocabularies/cultureelerfgoed/gtaa.yml
+  mapping: vocabularies/cultureelerfgoed/gtaa.xsl
+
+# Rijksdienst Cultureel Erfgoed - WO2 Biografieën (WO2B)
+- metadata: vocabularies/cultureelerfgoed/wo2b.yml
+  mapping: vocabularies/cultureelerfgoed/wo2b.xsl
+
+# Rijksdienst Cultureel Erfgoed - WO2 Thesaurus (WO2T)
+- metadata: vocabularies/cultureelerfgoed/wo2t.yml
+  mapping: vocabularies/cultureelerfgoed/wo2t.xsl
+
 # SearchCulture - Cultural Heritage Item Types
 - metadata: vocabularies/searchculture/chit.yml
   mapping: vocabularies/searchculture/chit.xsl

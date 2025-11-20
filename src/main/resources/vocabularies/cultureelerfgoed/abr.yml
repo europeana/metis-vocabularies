@@ -1,0 +1,12 @@
+name: Rijksdienst Cultureel Erfgoed - Archeologisch Basis Register (ABR)
+types:
+  - CONCEPT
+paths:
+  - https://data.cultureelerfgoed.nl/term/id/abr/
+suffix: .rdf
+examples:
+- https://data.cultureelerfgoed.nl/term/id/abr/000df2e7-28f2-4e50-82dc-f70faf0442d4
+- https://data.cultureelerfgoed.nl/term/id/abr/0037c5aa-b4f3-4a1a-af6f-bf69fa5b6975
+- https://data.cultureelerfgoed.nl/term/id/abr/0016421d-ebb9-41a4-bad9-7d00b7859c2d
+- https://data.cultureelerfgoed.nl/term/id/abr/00155b8e-07ca-4534-848b-a719e780de07
+- https://data.cultureelerfgoed.nl/term/id/abr/00c444de-9189-40af-99ad-720be6ef0223
