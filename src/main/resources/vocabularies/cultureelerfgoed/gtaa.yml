@@ -1,0 +1,13 @@
+name: Rijksdienst Cultureel Erfgoed - Common Thesaurus for Audiovisual Archives (GTAA)
+types:
+  - AGENT
+  - CONCEPT
+  - PLACE
+paths:
+  - http://data.beeldengeluid.nl/gtaa/
+examples:
+- http://data.beeldengeluid.nl/gtaa/30192
+- http://data.beeldengeluid.nl/gtaa/219829
+- http://data.beeldengeluid.nl/gtaa/262124
+- http://data.beeldengeluid.nl/gtaa/35188
+- http://data.beeldengeluid.nl/gtaa/217175

@@ -1,0 +1,12 @@
+name: Rijksdienst Cultureel Erfgoed - WO2 Biografieën (WO2B)
+types:
+  - AGENT
+paths:
+  - https://data.niod.nl/WO2_biografieen/
+suffix: .rdf
+examples:
+- https://data.niod.nl/WO2_biografieen/Eddy-Latuperisa
+- https://data.niod.nl/WO2_biografieen/Leon-Jungschlager
+- https://data.niod.nl/WO2_biografieen/Lt-Hugo-Sims
+- https://data.niod.nl/WO2_biografieen/Jan-Christian-Smuts
+- https://data.niod.nl/WO2_biografieen/Achmad-Soebardjo

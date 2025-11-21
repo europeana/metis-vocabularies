@@ -1,0 +1,15 @@
+name: Rijksdienst Cultureel Erfgoed - WO2 Thesaurus (WO2T)
+types:
+  - AGENT
+  - CONCEPT
+  - PLACE
+  - TIMESTAMP
+paths:
+  - https://data.niod.nl/WO2_Thesaurus/
+suffix: .rdf
+examples:
+- https://data.niod.nl/WO2_Thesaurus/events/8153
+- https://data.niod.nl/WO2_Thesaurus/3629
+- https://data.niod.nl/WO2_Thesaurus/kampen/5717
+- https://data.niod.nl/WO2_Thesaurus/corporaties/5590
+- https://data.niod.nl/WO2_Thesaurus/2564

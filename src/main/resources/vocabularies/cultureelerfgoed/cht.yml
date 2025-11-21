@@ -1,0 +1,12 @@
+name: Rijksdienst Cultureel Erfgoed - Cultural Heritage Thesaurus (CHT)
+types:
+  - CONCEPT
+paths:
+  - https://data.cultureelerfgoed.nl/term/id/cht/
+suffix: .rdf
+examples:
+- https://data.cultureelerfgoed.nl/term/id/cht/8bbb8345-d598-4eb4-aa13-3ef096ff439c
+- https://data.cultureelerfgoed.nl/term/id/cht/8b77ac38-693a-439a-8f38-540d9ccbac10
+- https://data.cultureelerfgoed.nl/term/id/cht/8bc5cd13-46fa-4cbf-ab72-6f04685bff09
+- https://data.cultureelerfgoed.nl/term/id/cht/8e1fcfed-6cbc-4a40-98bd-c85f6b5ed1cb
+- https://data.cultureelerfgoed.nl/term/id/cht/d64bb6fa-a272-4447-980d-92425cd2841c
