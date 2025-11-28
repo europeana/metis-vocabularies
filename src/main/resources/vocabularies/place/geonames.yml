@@ -3,7 +3,6 @@ types:
 - PLACE
 paths:
 - https://sws.geonames.org/
-parentIterations: 1
 resourceUrlTemplate: http://geonames.europeana.eu/sparql/?default-graph-uri=&query=CONSTRUCT%20%7B%20%3Fplace%20%3Fp%20%3Fo%20%7D%0AWHERE%20%7B%20%3Fplace%20%3Fp%20%3Fo%20FILTER%20%28%3Fplace%20%3D%20%3C${resourceId|urlQueryEscape}%3E%29%20%7D&format=application%2Frdf%2Bxml&timeout=0&signal_void=on
 examples:
 - https://sws.geonames.org/1123961/
