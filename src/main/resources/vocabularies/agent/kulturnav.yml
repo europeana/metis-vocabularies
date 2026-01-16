@@ -3,7 +3,7 @@ types:
   - AGENT
 paths:
   - http://kulturnav.org/
-suffix: .rdf
+resourceUrlTemplate: ${resourceId}.rdf
 examples:
   - http://kulturnav.org/e2903551-cc56-46a3-9a8d-873b45f1f841
   - http://kulturnav.org/cbfdca64-f0d0-49b1-a68e-dc53d1bed4db

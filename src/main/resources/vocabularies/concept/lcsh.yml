@@ -3,7 +3,7 @@ types:
 - CONCEPT
 paths:
 - http://id.loc.gov/authorities/subjects/
-suffix: .skos.rdf
+resourceUrlTemplate: ${resourceId}.skos.rdf
 examples:
 - http://id.loc.gov/authorities/subjects/sh85085001
 - http://id.loc.gov/authorities/subjects/sh85085171

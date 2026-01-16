@@ -6,7 +6,7 @@ types:
   - TIMESTAMP
 paths:
   - https://data.niod.nl/WO2_Thesaurus/
-suffix: .rdf
+resourceUrlTemplate: ${resourceId}.rdf
 examples:
 - https://data.niod.nl/WO2_Thesaurus/events/8153
 - https://data.niod.nl/WO2_Thesaurus/3629

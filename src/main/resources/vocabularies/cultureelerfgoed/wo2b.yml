@@ -3,7 +3,7 @@ types:
   - AGENT
 paths:
   - https://data.niod.nl/WO2_biografieen/
-suffix: .rdf
+resourceUrlTemplate: ${resourceId}.rdf
 examples:
 - https://data.niod.nl/WO2_biografieen/Eddy-Latuperisa
 - https://data.niod.nl/WO2_biografieen/Leon-Jungschlager

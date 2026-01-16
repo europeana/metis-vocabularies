@@ -3,7 +3,7 @@ types:
 - CONCEPT
 paths:
 - https://iconclass.org/
-suffix: .rdf
+resourceUrlTemplate: ${resourceId}.rdf
 examples:
 - https://iconclass.org/11%28%2B5%29
 - https://iconclass.org/46D3

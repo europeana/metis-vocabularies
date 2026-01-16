@@ -3,7 +3,7 @@ types:
   - CONCEPT
 paths:
   - https://data.cultureelerfgoed.nl/term/id/cht/
-suffix: .rdf
+resourceUrlTemplate: ${resourceId}.rdf
 examples:
 - https://data.cultureelerfgoed.nl/term/id/cht/8bbb8345-d598-4eb4-aa13-3ef096ff439c
 - https://data.cultureelerfgoed.nl/term/id/cht/8b77ac38-693a-439a-8f38-540d9ccbac10
