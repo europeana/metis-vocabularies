@@ -51,10 +51,6 @@ starts with either one of the given paths. At least one path must be given. Thes
 collide with each other or with paths from other vocabularies, in the sense that one is not allowed
 to be a substring of another. This guarantees that for any entity ID (`rdf:about`) there is always 
 at most one vocabulary that matches it.
-* **suffix** (String value - ***DEPRECATED***): the suffix to be applied to the entity's ID value 
-(`rdf:about`) in order to obtain a workable download URL. Common values are `.edm` or `.rdf`, but 
-other values can be set. This field is optional (with the empty String as default value). The use of 
-this field is discouraged: use `resourceUrlTemplate` instead. 
 * **resourceUrlTemplate** (String value): the template to apply to generate the URL where a resource
 may be obtained, based on various input data, including the resource ID. The reality is that 
 resource IDs may not be resolvable to the RDF+XML version of the resource (or may not be resolvable 
@@ -75,13 +71,6 @@ vocabulary applied to the given entity ID returns an object of the given type).
 IDs that should **not** be supported by this vocabulary. This may be used for testing purposes (to 
 check that applying this vocabulary applied to the given entity ID neither fails nor returns a 
 result). 
-
-> [!WARNING]
-> The field `suffix` is deprecated, and scheduled for removal. Its use is strongly discouraged. Use 
-> the field `resourceUrlTemplate` instead. See the dedicated section below for more information on
-> the template options, including an example on how to achieve the suffix functionality using this 
-> field. If both `suffix` and `resourceUrlTemplate` are used for the same vocabulary, the 
-> `suffix` value will be ignored.
 
 ### Example
 
@@ -142,6 +131,8 @@ resource ID should be URL-escaped and put as value for a query parameter for an 
 ### Evolution of the metatada fields
 
 **Note:** several old fields have been removed from this format.
+* The `suffix` field has been deprecated in favor of the more generic and powerful 
+* `resourceUrlTemplate` field. 
 * The `url` and `rules` fields have been merged into the `paths` field, to make things more clear.
 * The `typeRules` field has been abandoned. Any behavior here can be specified more precisely and in
 a less error-prone way by modifying the XSLT mapping file.
