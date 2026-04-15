@@ -56,6 +56,12 @@ may be obtained, based on various input data, including the resource ID. The rea
 resource IDs may not be resolvable to the RDF+XML version of the resource (or may not be resolvable 
 at all). See the dedicated section below for more information on the template options, including
 useful examples.
+* **mediaType** (String value): the `Accept` HTTP header value to set when querying this vocabulary.
+At the time of writing, supported RDF representations are `application/xml`, `text/xml`,
+`application/rdf+xml` (for RDF/XML), `text/turtle` (for Turtle), and `application/n-triples` (for
+N-Triples). If this value is absent (or `null`) the following default value will be used: 
+`application/rdf+xml`. Note: if a representation other than RDF/XML is specified, we will first 
+convert any incoming data to RDF/XML, and then proceed as usual (i.e., applying the mapping).
 * **userAgent** (String value): the `User agent` HTTP header value to set when querying this
 vocabulary. If this value is absent (or `null`) a default value will be used in HTTP connections to 
 this vocabulary.  
