@@ -46,6 +46,10 @@
 - metadata: vocabularies/gnd/gnd.yml
   mapping: vocabularies/gnd/gnd.xsl
 
+# Homosaurus
+- metadata: vocabularies/concept/homosaurus.yml
+  mapping: vocabularies/concept/homosaurus.xsl
+
 # Iconclass
 - metadata: vocabularies/concept/iconclass.yml
   mapping: vocabularies/concept/iconclass.xsl

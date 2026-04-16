@@ -1,0 +1,8 @@
+name: Homosaurus
+types:
+  - CONCEPT
+paths:
+  - https://data.ihlia.nl/homosaurus/
+resourceUrlTemplate: ${resourceId}.rdf
+examples:
+  - https://data.ihlia.nl/homosaurus/homoit0003777
