@@ -2,6 +2,10 @@
 - metadata: vocabularies/concept/aat.yml
   mapping: vocabularies/concept/aat.xsl
 
+# Adamlink - Amsterdam
+- metadata: vocabularies/multitype/adamlink.yml
+  mapping: vocabularies/multitype/adamlink.xsl
+
 # DeBias vocabulary
 - metadata: vocabularies/concept/debias.yml
   mapping: vocabularies/concept/debias.xsl

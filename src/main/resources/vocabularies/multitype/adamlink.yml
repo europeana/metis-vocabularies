@@ -1,0 +1,13 @@
+name: Adamlink Reference Data - Historical addresses in Amsterdam
+types:
+  - AGENT
+  - PLACE
+paths:
+  - https://adamlink.nl/person/
+  - https://adamlink.nl/geo/street/
+  - https://adamlink.nl/geo/building/
+examples:
+  - https://adamlink.nl/person/amsterdamsche-courant/10515
+  - https://adamlink.nl/geo/street/kamperhoofd/5681
+  - https://adamlink.nl/geo/building/oude-kerk/331
+  - https://adamlink.nl/geo/street/amstelpark/142
