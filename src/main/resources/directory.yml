@@ -54,6 +54,10 @@
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
 
+# Kamp Westerbork Thesaurus
+- metadata: vocabularies/concept/westerbork.yml
+  mapping: vocabularies/concept/westerbork.xsl
+
 # KulturNav (Norway)
 - metadata: vocabularies/agent/kulturnav.yml
   mapping: vocabularies/agent/kulturnav.xsl

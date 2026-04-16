@@ -1,0 +1,8 @@
+name: Kamp Westerbork Thesaurus
+types:
+  - CONCEPT
+paths:
+  - https://digitaalerfgoed.poolparty.biz/westerbork/
+resourceUrlTemplate: ${resourceId}.rdf
+examples:
+  - https://digitaalerfgoed.poolparty.biz/westerbork/3020
