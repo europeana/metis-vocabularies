@@ -86,6 +86,10 @@
 - metadata: vocabularies/cultureelerfgoed/abr.yml
   mapping: vocabularies/cultureelerfgoed/abr.xsl
 
+# Rijksdienst Cultureel Erfgoed - Colonial Past (KV)
+- metadata: vocabularies/cultureelerfgoed/kv.yml
+  mapping: vocabularies/cultureelerfgoed/kv.xsl
+
 # Rijksdienst Cultureel Erfgoed - Cultural Heritage Thesaurus (CHT)
 - metadata: vocabularies/cultureelerfgoed/cht.yml
   mapping: vocabularies/cultureelerfgoed/cht.xsl
