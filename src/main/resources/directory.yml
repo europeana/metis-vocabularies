@@ -34,6 +34,10 @@
 - metadata: vocabularies/concept/europeana_ww1.yml
   mapping: vocabularies/concept/europeana_ww1.xsl
 
+# EuroVoc - European Data
+- metadata: vocabularies/concept/eurovoc.yml
+  mapping: vocabularies/concept/eurovoc.xsl
+
 # Geonames
 - metadata: vocabularies/place/geonames.yml
   mapping: vocabularies/place/geonames.xsl
