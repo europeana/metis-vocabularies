@@ -142,6 +142,10 @@
 - metadata: vocabularies/place/tgn.yml
   mapping: vocabularies/place/tgn.xsl
 
+# Thesaurus Historic Personal Data (THP) - Persons in Context
+- metadata: vocabularies/concept/thp.yml
+  mapping: vocabularies/concept/thp.xsl
+
 # UDC - Universal Decimal Classification
 - metadata: vocabularies/concept/udc.yml
   mapping: vocabularies/concept/udc.xsl
