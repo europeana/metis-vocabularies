@@ -5,6 +5,6 @@ paths:
 - https://iconclass.org/
 resourceUrlTemplate: ${resourceId}.rdf
 examples:
-- https://iconclass.org/11%28%2B5%29
+- https://iconclass.org/11(+5)
 - https://iconclass.org/46D3
 - https://iconclass.org/25H11

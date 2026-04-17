@@ -3,5 +3,7 @@ types:
 - CONCEPT
 paths:
 - http://vocabularies.unesco.org/thesaurus/
+resourceUrlTemplate: https://vocabularies.unesco.org/browser/rest/v1/thesaurus/data?uri=${resourceId|urlQueryEscape}&format=application/rdf%2Bxml
+userAgent: "PostmanRuntime/7.28.4"
 examples:
 - http://vocabularies.unesco.org/thesaurus/concept10423
