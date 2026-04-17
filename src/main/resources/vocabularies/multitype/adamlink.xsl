@@ -9,6 +9,8 @@
 
 <xsl:stylesheet version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+  xmlns:geo="http://www.opengis.net/ont/geosparql#"
   xmlns:schema="https://schema.org/"
   xmlns:hg="http://rdf.histograph.io/"
   xmlns:edm="http://www.europeana.eu/schemas/edm/"
@@ -50,6 +52,14 @@
           <xsl:copy-of select="@rdf:resource"/>
         </dcterms:hasPart>
       </xsl:for-each>
+      <!-- Tag mapping: geo:asWKT POINT -> wgs84_pos:lat and wgs84_pos:long -->
+      <xsl:if test="contains(geo:hasGeometry/rdf:Description/geo:asWKT, 'POINT')">
+        <xsl:variable name="coordinates" select="substring-before(substring-after(geo:hasGeometry/rdf:Description/geo:asWKT, 'POINT('), ')')"/>
+        <xsl:variable name="longitude" select="substring-before($coordinates, ' ')"/>
+        <xsl:variable name="latitude" select="substring-after($coordinates, ' ')"/>
+        <wgs84_pos:long><xsl:value-of select="$longitude"/></wgs84_pos:long>
+        <wgs84_pos:lat><xsl:value-of select="$latitude"/></wgs84_pos:lat>
+      </xsl:if>
       <!-- Tag mapping: owl:sameAs -> owl:sameAs -->
       <xsl:for-each select="owl:sameAs">
         <owl:sameAs>
