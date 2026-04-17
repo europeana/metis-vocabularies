@@ -58,6 +58,10 @@
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
 
+# IED - Indisch Erfgoed Thesaurus
+- metadata: vocabularies/multitype/ied.yml
+  mapping: vocabularies/multitype/ied.xsl
+
 # Kamp Westerbork Thesaurus
 - metadata: vocabularies/concept/westerbork.yml
   mapping: vocabularies/concept/westerbork.xsl
