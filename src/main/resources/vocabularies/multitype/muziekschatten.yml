@@ -1,0 +1,8 @@
+name: Muziekschatten - Musical Treasures
+types:
+  - AGENT
+  - CONCEPT
+paths:
+  - https://data.muziekschatten.nl/som/
+examples:
+  - https://data.muziekschatten.nl/som/3a0cf23044ffd5d2aaf849dfdd96a549

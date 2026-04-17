@@ -82,6 +82,10 @@
 - metadata: vocabularies/concept/mimo.yml
   mapping: vocabularies/concept/mimo.xsl
 
+# Muziekschatten - Musical Treasures
+- metadata: vocabularies/multitype/muziekschatten.yml
+  mapping: vocabularies/multitype/muziekschatten.xsl
+
 # Objektbezeichnungsdatei (OBG)
 - metadata: vocabularies/concept/obg.yml
   mapping: vocabularies/concept/obg.xsl
