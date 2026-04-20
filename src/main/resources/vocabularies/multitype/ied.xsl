@@ -116,6 +116,10 @@
             <xsl:copy-of select="@rdf:about" />
             <!-- Tag mapping: skos:prefLabel -> skos:prefLabel -->
             <xsl:apply-templates select="skos:prefLabel" />
+            <!-- Tag mapping: if type ConceptScheme, dcterms:title -> skos:prefLabel -->
+            <xsl:if test="rdf:type[@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']">
+              <xsl:apply-templates select="dcterms:title" mode="asPrefLabel"/>
+            </xsl:if>
             <!-- Tag mapping: skos:altLabel -> skos:altLabel -->
             <xsl:apply-templates select="skos:altLabel" />
             <!-- Tag mapping: skos:broader -> skos:broader -->
@@ -153,6 +157,24 @@
         <xsl:element name="skos:{local-name()}">
           <xsl:value-of select="." />
         </xsl:element>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <!-- Template for dcterms:title -> skos:prefLabel (for ConceptScheme) -->
+  <xsl:template match="dcterms:title" mode="asPrefLabel">
+    <xsl:choose>
+      <!-- Option 1: element has xml:lang and it's acceptable -->
+      <xsl:when test="@xml:lang and lib:isAcceptableLang(@xml:lang)">
+        <skos:prefLabel>
+          <xsl:copy-of select="@xml:lang" />
+          <xsl:value-of select="." />
+        </skos:prefLabel>
+      </xsl:when>
+      <!-- Option 2: element has no xml:lang -->
+      <xsl:otherwise>
+        <skos:prefLabel>
+          <xsl:value-of select="." />
+        </skos:prefLabel>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
