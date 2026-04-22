@@ -1,0 +1,13 @@
+name: IED - Indisch Erfgoed Thesaurus
+types:
+  - AGENT
+  - CONCEPT
+  - PLACE
+  - TIMESTAMP
+paths:
+  - https://data.indischherinneringscentrum.nl/ied/
+resourceUrlTemplate: ${resourceId}.rdf
+examples:
+  - https://data.indischherinneringscentrum.nl/ied/110767
+  - https://data.indischherinneringscentrum.nl/ied/104008
+  - https://data.indischherinneringscentrum.nl/ied/100364

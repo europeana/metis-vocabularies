@@ -1,0 +1,9 @@
+name: Rijksdienst Cultureel Erfgoed - Colonial Past (KV)
+types:
+  - CONCEPT
+  - PLACE
+paths:
+  - https://data.cultureelerfgoed.nl/koloniaalverleden/
+resourceUrlTemplate: ${resourceId}.rdf
+examples:
+  - https://data.cultureelerfgoed.nl/koloniaalverleden/be4e27d5-6519-447d-952b-c224bfbcce63

@@ -1,0 +1,8 @@
+name: Thesaurus Historic Personal Data (THP) - Persons in Context
+types:
+  - CONCEPT
+paths:
+  - https://terms.personsincontext.org/ThesaurusHistorischePersoonsgegevens/
+resourceUrlTemplate: ${resourceId}.rdf
+examples:
+  - https://terms.personsincontext.org/ThesaurusHistorischePersoonsgegevens/69

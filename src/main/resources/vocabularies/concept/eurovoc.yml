@@ -1,0 +1,7 @@
+name: EuroVoc - European Data
+types:
+  - CONCEPT
+paths:
+  - http://eurovoc.europa.eu/
+examples:
+  - http://eurovoc.europa.eu/5713

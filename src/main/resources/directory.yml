@@ -2,6 +2,10 @@
 - metadata: vocabularies/concept/aat.yml
   mapping: vocabularies/concept/aat.xsl
 
+# Adamlink - Amsterdam
+- metadata: vocabularies/multitype/adamlink.yml
+  mapping: vocabularies/multitype/adamlink.xsl
+
 # DeBias vocabulary
 - metadata: vocabularies/concept/debias.yml
   mapping: vocabularies/concept/debias.xsl
@@ -30,6 +34,10 @@
 - metadata: vocabularies/concept/europeana_ww1.yml
   mapping: vocabularies/concept/europeana_ww1.xsl
 
+# EuroVoc - European Data
+- metadata: vocabularies/concept/eurovoc.yml
+  mapping: vocabularies/concept/eurovoc.xsl
+
 # Geonames
 - metadata: vocabularies/place/geonames.yml
   mapping: vocabularies/place/geonames.xsl
@@ -38,6 +46,10 @@
 - metadata: vocabularies/gnd/gnd.yml
   mapping: vocabularies/gnd/gnd.xsl
 
+# Homosaurus
+- metadata: vocabularies/concept/homosaurus.yml
+  mapping: vocabularies/concept/homosaurus.xsl
+
 # Iconclass
 - metadata: vocabularies/concept/iconclass.yml
   mapping: vocabularies/concept/iconclass.xsl
@@ -45,6 +57,14 @@
 # IMJ (Israel Museum Jerusalem)
 - metadata: vocabularies/concept/imj.yml
   mapping: vocabularies/concept/imj.xsl
+
+# IED - Indisch Erfgoed Thesaurus
+- metadata: vocabularies/multitype/ied.yml
+  mapping: vocabularies/multitype/ied.xsl
+
+# Kamp Westerbork Thesaurus
+- metadata: vocabularies/concept/westerbork.yml
+  mapping: vocabularies/concept/westerbork.xsl
 
 # KulturNav (Norway)
 - metadata: vocabularies/agent/kulturnav.yml
@@ -66,6 +86,10 @@
 - metadata: vocabularies/concept/mimo.yml
   mapping: vocabularies/concept/mimo.xsl
 
+# Muziekschatten - Musical Treasures
+- metadata: vocabularies/multitype/muziekschatten.yml
+  mapping: vocabularies/multitype/muziekschatten.xsl
+
 # Objektbezeichnungsdatei (OBG)
 - metadata: vocabularies/concept/obg.yml
   mapping: vocabularies/concept/obg.xsl
@@ -77,6 +101,10 @@
 # Rijksdienst Cultureel Erfgoed - Archeologisch Basis Register (ABR)
 - metadata: vocabularies/cultureelerfgoed/abr.yml
   mapping: vocabularies/cultureelerfgoed/abr.xsl
+
+# Rijksdienst Cultureel Erfgoed - Colonial Past (KV)
+- metadata: vocabularies/cultureelerfgoed/kv.yml
+  mapping: vocabularies/cultureelerfgoed/kv.xsl
 
 # Rijksdienst Cultureel Erfgoed - Cultural Heritage Thesaurus (CHT)
 - metadata: vocabularies/cultureelerfgoed/cht.yml
@@ -121,6 +149,10 @@
 # TGN - Getty Thesaurus of Geographic Names
 - metadata: vocabularies/place/tgn.yml
   mapping: vocabularies/place/tgn.xsl
+
+# Thesaurus Historic Personal Data (THP) - Persons in Context
+- metadata: vocabularies/concept/thp.yml
+  mapping: vocabularies/concept/thp.xsl
 
 # UDC - Universal Decimal Classification
 - metadata: vocabularies/concept/udc.yml
