@@ -6,6 +6,10 @@
 - metadata: vocabularies/multitype/adamlink.yml
   mapping: vocabularies/multitype/adamlink.xsl
 
+# Brinkman - Subjects that the National Library of the Netherlands assigns to publications
+- metadata: vocabularies/concept/brinkman.yml
+  mapping: vocabularies/concept/brinkman.xsl
+
 # DeBias vocabulary
 - metadata: vocabularies/concept/debias.yml
   mapping: vocabularies/concept/debias.xsl

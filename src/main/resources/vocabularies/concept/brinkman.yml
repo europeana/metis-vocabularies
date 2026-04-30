@@ -1,0 +1,10 @@
+name: Brinkman
+types:
+  - CONCEPT
+paths:
+  - http://data.bibliotheken.nl/id/thes/
+mediaType:
+  - application/n-triples
+  - text/turtle
+examples:
+  - http://data.bibliotheken.nl/id/thes/p075598272
