@@ -1,0 +1,9 @@
+name: EU Publication Office - Countries and territories
+types:
+  - PLACE
+paths:
+  - http://publications.europa.eu/resource/authority/country/
+examples:
+  - http://publications.europa.eu/resource/authority/country/BEL
+  - http://publications.europa.eu/resource/authority/country/SWZ
+  - http://publications.europa.eu/resource/authority/country/ITA
