@@ -3,8 +3,11 @@ types:
 - CONCEPT
 paths:
 - http://vocab.getty.edu/aat
+resourceUrlTemplate: ${resourceId}.rdf
+userAgent: "Apache-HttpClient/5 (Java/21)"
 examples:
 - http://vocab.getty.edu/aat/300198626
 - http://vocab.getty.edu/aat/300000228
 - http://vocab.getty.edu/aat/300000206
 - http://vocab.getty.edu/aat/300054328
+- http://vocab.getty.edu/aat/300190531

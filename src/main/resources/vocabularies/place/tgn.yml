@@ -3,6 +3,8 @@ types:
 - PLACE
 paths:
 - http://vocab.getty.edu/tgn/
+resourceUrlTemplate: ${resourceId}.rdf
+userAgent: "Apache-HttpClient/5 (Java/21)"
 examples:
 - http://vocab.getty.edu/tgn/7006810
 - http://vocab.getty.edu/tgn/1003865

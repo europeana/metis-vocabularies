@@ -3,6 +3,8 @@ types:
 - AGENT
 paths:
 - http://vocab.getty.edu/ulan
+resourceUrlTemplate: ${resourceId}.rdf
+userAgent: "Apache-HttpClient/5 (Java/21)"
 examples:
 - http://vocab.getty.edu/ulan/500032927
 - http://vocab.getty.edu/ulan/500000043
